@@ -181,7 +181,8 @@ textarea:focus, input:focus { outline: none; border-color: var(--accent); }
     <div class="lock-emoji">🌿</div>
     <div class="lock-title">からだの記録</div>
     <div class="lock-subtitle">あいことばを入れてください</div>
-    <input type="password" class="lock-input" id="lockInput" placeholder="あいことば" autofocus
+    <input type="text" class="lock-input" id="lockInput" placeholder="あいことば" autofocus
+      autocomplete="off" autocapitalize="off"
       onkeydown="if(event.key==='Enter')checkPassword()">
     <button class="lock-btn" onclick="checkPassword()">入る</button>
     <div class="lock-error" id="lockError"></div>
