@@ -109,9 +109,84 @@ textarea:focus, input:focus { outline: none; border-color: var(--accent); }
 .sub-tab { padding: 7px 14px; background: var(--bg); border: 1px solid var(--line); border-radius: 20px; font-family: inherit; font-size: 13px; color: var(--ink-soft); cursor: pointer; transition: all .15s; }
 .sub-tab.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 500; }
 .modal-note { font-size: 12px; color: var(--ink-soft); line-height: 1.7; margin-top: 6px; }
+
+/* ロック画面 */
+#lockScreen {
+  position: fixed; inset: 0; z-index: 999;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(217,119,87,.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(138,154,123,.06) 0%, transparent 50%);
+}
+.lock-card {
+  background: var(--bg-card);
+  border-radius: 20px;
+  padding: 36px 28px;
+  max-width: 360px;
+  width: 100%;
+  border: 1px solid var(--line);
+  text-align: center;
+}
+.lock-emoji { font-size: 42px; margin-bottom: 14px; }
+.lock-title {
+  font-family: 'Klee One', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.lock-subtitle { font-size: 13px; color: var(--ink-soft); margin-bottom: 26px; }
+.lock-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  font-family: inherit;
+  font-size: 16px;
+  background: var(--bg);
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 12px;
+}
+.lock-input:focus { outline: none; border-color: var(--accent); }
+.lock-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--rose) 100%);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: .05em;
+}
+.lock-btn:active { transform: scale(.97); }
+.lock-error {
+  font-size: 13px;
+  color: var(--rose);
+  margin-top: 8px;
+  height: 18px;
+}
 </style>
 </head>
 <body>
+
+<!-- ロック画面 -->
+<div id="lockScreen">
+  <div class="lock-card">
+    <div class="lock-emoji">🌿</div>
+    <div class="lock-title">からだの記録</div>
+    <div class="lock-subtitle">あいことばを入れてください</div>
+    <input type="password" class="lock-input" id="lockInput" placeholder="あいことば" autofocus
+      onkeydown="if(event.key==='Enter')checkPassword()">
+    <button class="lock-btn" onclick="checkPassword()">入る</button>
+    <div class="lock-error" id="lockError"></div>
+  </div>
+</div>
 
 <div id="emojiOverlay" class="emoji-overlay" style="display:none">
   <div class="emoji-panel">
@@ -241,6 +316,21 @@ textarea:focus, input:focus { outline: none; border-color: var(--accent); }
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
+// ===== あいことばロック =====
+var SECRET_PASSWORD = 'みちくん';
+
+function checkPassword() {
+  var input = document.getElementById('lockInput').value.trim();
+  var errorEl = document.getElementById('lockError');
+  if (input === SECRET_PASSWORD) {
+    document.getElementById('lockScreen').style.display = 'none';
+  } else {
+    errorEl.textContent = 'あいことばが ちがいます';
+    document.getElementById('lockInput').value = '';
+    setTimeout(function(){ errorEl.textContent = ''; }, 2500);
+  }
+}
+
 var firebaseConfig = {
   apiKey: "AIzaSyC-ujNsGgvWfv2L8XONYFRYAo6tpku1BH0",
   authDomain: "condition-kazutan-manager.firebaseapp.com",
