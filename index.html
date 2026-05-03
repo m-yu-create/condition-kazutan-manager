@@ -113,7 +113,7 @@ textarea:focus, input:focus { outline: none; border-color: var(--accent); }
 </head>
 <body>
 
-<div id="emojiOverlay" class="emoji-overlay hidden">
+<div id="emojiOverlay" class="emoji-overlay" style="display:none">
   <div class="emoji-panel">
     <div class="emoji-panel-title">絵文字を選んで</div>
     <div class="emoji-grid" id="emojiGrid"></div>
@@ -347,18 +347,18 @@ function openEmojiPicker(fbKey) {
     html += '<button class="emoji-opt" onclick="pickEmoji(\'' + EMOJIS[i] + '\')">' + EMOJIS[i] + '</button>';
   }
   document.getElementById('emojiGrid').innerHTML = html;
-  document.getElementById('emojiOverlay').classList.remove('hidden');
+  document.getElementById('emojiOverlay').style.display = 'flex';
 }
 
 function pickEmoji(emoji) {
   if (!emojiTarget) return;
   db.ref('members/' + emojiTarget + '/emoji').set(emoji);
-  document.getElementById('emojiOverlay').classList.add('hidden');
+  document.getElementById('emojiOverlay').style.display = 'none';
   emojiTarget = null;
 }
 
 document.getElementById('emojiOverlay').addEventListener('click', function(e) {
-  if (e.target === this) this.classList.add('hidden');
+  if (e.target === this) this.style.display = 'none';
 });
 
 function renderMemberListManage() {
