@@ -181,8 +181,10 @@ textarea:focus, input:focus { outline: none; border-color: var(--accent); }
     <div class="lock-emoji">🌿</div>
     <div class="lock-title">からだの記録</div>
     <div class="lock-subtitle">あいことばを入れてください</div>
-    <input type="text" class="lock-input" id="lockInput" placeholder="あいことば" autofocus
-      autocomplete="off" autocapitalize="off"
+    <input type="text" class="lock-input" id="greetingText" name="greeting" autofocus
+      placeholder="ひらがなで入力"
+      autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
+      inputmode="text" lang="ja"
       onkeydown="if(event.key==='Enter')checkPassword()">
     <button class="lock-btn" onclick="checkPassword()">入る</button>
     <div class="lock-error" id="lockError"></div>
@@ -321,13 +323,13 @@ textarea:focus, input:focus { outline: none; border-color: var(--accent); }
 var SECRET_PASSWORD = 'みちくん';
 
 function checkPassword() {
-  var input = document.getElementById('lockInput').value.trim();
+  var input = document.getElementById('greetingText').value.trim();
   var errorEl = document.getElementById('lockError');
   if (input === SECRET_PASSWORD) {
     document.getElementById('lockScreen').style.display = 'none';
   } else {
     errorEl.textContent = 'あいことばが ちがいます';
-    document.getElementById('lockInput').value = '';
+    document.getElementById('greetingText').value = '';
     setTimeout(function(){ errorEl.textContent = ''; }, 2500);
   }
 }
