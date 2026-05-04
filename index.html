@@ -82,7 +82,8 @@ textarea:focus, input:focus { outline: none; border-color: var(--accent); }
 .stat-value { font-family: 'Klee One', serif; font-size: 16px; font-weight: 600; color: var(--accent); }
 .bar-chart { display: flex; align-items: flex-end; gap: 4px; height: 80px; margin-top: 12px; }
 .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; }
-.bar { width: 100%; background: linear-gradient(to top, var(--accent), var(--accent-soft)); border-radius: 4px 4px 0 0; min-height: 2px; }
+.bar { width: 100%; background: linear-gradient(to top, var(--accent), var(--accent-soft)); border-radius: 4px 4px 0 0; }
+.bar.has-value { min-height: 2px; }
 .bar-label { font-size: 10px; color: var(--ink-soft); text-align: center; }
 .empty { text-align: center; padding: 40px 20px; color: var(--ink-soft); font-size: 14px; line-height: 1.8; }
 .hidden { display: none; }
@@ -189,11 +190,12 @@ textarea:focus, input:focus { outline: none; border-color: var(--accent); }
   padding: 4px 0; font-weight: 500;
 }
 .cal-day {
-  aspect-ratio: 1; display: flex; flex-direction: column;
+  min-height: 44px; display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  border-radius: 8px; font-size: 11px;
+  border-radius: 8px; font-size: 11px; padding: 4px 2px;
   background: var(--bg); border: 1px solid transparent;
-  position: relative;
+  position: relative; box-sizing: border-box;
+  overflow: hidden;
 }
 .cal-day.empty { background: transparent; }
 .cal-day.today { border-color: var(--accent); font-weight: 600; }
@@ -741,7 +743,7 @@ function renderAnalysis() {
   var slotKeys = ['朝','昼','夕方','夜','深夜'];
   for(var i=0;i<slotKeys.length;i++){
     var sk=slotKeys[i], sv=slots[sk];
-    barHtml += '<div class="bar-col"><div class="bar" style="height:'+(sv/maxBar*68)+'px"></div>' +
+    barHtml += '<div class="bar-col"><div class="bar'+(sv>0?' has-value':'')+'" style="height:'+(sv/maxBar*68)+'px"></div>' +
       '<div class="bar-label">'+sk+'</div><div class="bar-label" style="font-weight:600;color:var(--ink)">'+sv+'</div></div>';
   }
 
@@ -771,7 +773,7 @@ function renderAnalysis() {
   for (var i=0;i<7;i++) {
     var ratio = dowBadCounts[i] / maxDowBad;
     dowHtml += '<div class="bar-col">' +
-      '<div class="bar" style="height:'+(ratio*68)+'px;background:linear-gradient(to top, var(--rose), var(--accent-soft))"></div>' +
+      '<div class="bar'+(dowBadCounts[i]>0?' has-value':'')+'" style="height:'+(ratio*68)+'px;background:linear-gradient(to top, var(--rose), var(--accent-soft))"></div>' +
       '<div class="bar-label">'+dowNames[i]+'</div>' +
       '<div class="bar-label" style="font-weight:600;color:var(--ink)">'+dowBadCounts[i]+'</div>' +
       '</div>';
@@ -924,18 +926,20 @@ function renderCalendarHtml(data) {
   var lastDate = new Date(year, month+1, 0).getDate();
   var today = new Date();
 
-  // 日ごとに体調集計（その日の最悪を採用）
-  var condRank = { genki:1, futsuu:2, warui:3, tsurai:4 };
+  // 日ごとに体調集計（その日の最新の記録を表示）
   var condClass = { genki:'cal-day-genki', futsuu:'cal-day-futsuu', warui:'cal-day-warui', tsurai:'cal-day-tsurai' };
   var condEmoji = { genki:'☀️', futsuu:'🌤', warui:'🌧', tsurai:'⛈' };
-  var dayMap = {};
+  var dayMap = {};      // {日: cond}
+  var dayLatestTs = {}; // {日: timestamp}
   for (var i=0;i<data.length;i++) {
     var d = new Date(data[i].timestamp);
     if (d.getFullYear() !== year || d.getMonth() !== month) continue;
     var date = d.getDate();
     if (!data[i].cond) continue;
-    if (!dayMap[date] || condRank[data[i].cond] > condRank[dayMap[date]]) {
+    var ts = d.getTime();
+    if (!dayLatestTs[date] || ts > dayLatestTs[date]) {
       dayMap[date] = data[i].cond;
+      dayLatestTs[date] = ts;
     }
   }
 
