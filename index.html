@@ -235,6 +235,77 @@ textarea:focus, input:focus { outline: none; border-color: var(--accent); }
 .period-bar-seg-warui  { background: var(--accent); }
 .period-bar-seg-tsurai { background: var(--rose); }
 .period-bar-label { font-size: 10px; color: var(--ink-soft); text-align: center; }
+
+/* マニュアル・仕様セクション */
+.manual-section { margin-bottom: 18px; }
+.manual-h3 {
+  font-family: 'Klee One', serif;
+  font-size: 14px; font-weight: 600; color: var(--accent);
+  margin: 16px 0 8px;
+  padding: 6px 10px;
+  background: var(--accent-soft);
+  border-radius: 8px;
+  display: inline-block;
+}
+.manual-h4 {
+  font-size: 13px; font-weight: 600; color: var(--ink);
+  margin: 12px 0 6px;
+}
+.manual-text {
+  font-size: 13px; color: var(--ink); line-height: 1.8;
+  margin-bottom: 8px;
+}
+.manual-text b { color: var(--rose); }
+.manual-list { list-style: none; padding: 0; margin: 6px 0; }
+.manual-list li {
+  font-size: 13px; color: var(--ink); line-height: 1.7;
+  padding: 4px 0 4px 16px; position: relative;
+}
+.manual-list li::before {
+  content: '🌿'; position: absolute; left: 0; font-size: 10px;
+}
+.manual-table {
+  width: 100%; border-collapse: collapse;
+  font-size: 12px; margin: 8px 0;
+  background: var(--bg); border-radius: 8px; overflow: hidden;
+}
+.manual-table th, .manual-table td {
+  padding: 8px 10px; text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+.manual-table th {
+  background: var(--accent-soft); color: var(--accent);
+  font-weight: 600; font-size: 12px;
+}
+.manual-table tr:last-child td { border-bottom: none; }
+.manual-callout {
+  background: var(--accent-soft); border-radius: 10px;
+  padding: 10px 14px; margin: 8px 0;
+  font-size: 12px; color: var(--ink); line-height: 1.7;
+}
+.manual-callout-title {
+  font-weight: 600; color: var(--rose);
+  margin-bottom: 4px; font-size: 13px;
+}
+
+/* アコーディオン */
+.acc-toggle {
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; user-select: none;
+  padding: 4px 0;
+}
+.acc-toggle .arrow {
+  font-size: 12px; color: var(--ink-soft);
+  transition: transform .2s;
+}
+.acc-toggle.open .arrow { transform: rotate(180deg); }
+.acc-content {
+  max-height: 0; overflow: hidden;
+  transition: max-height .3s ease;
+}
+.acc-content.open {
+  max-height: 5000px;
+}
 </style>
 </head>
 <body>
@@ -377,6 +448,181 @@ textarea:focus, input:focus { outline: none; border-color: var(--accent); }
       <div class="stat-row">
         <span class="stat-label">ステータス</span>
         <span class="stat-value" id="settingsSyncText" style="font-size:13px">確認中</span>
+      </div>
+    </div>
+
+    <!-- マニュアル -->
+    <div class="card">
+      <div class="acc-toggle" onclick="toggleAcc(this)">
+        <div class="section-title" style="margin-bottom:0">📖 マニュアル</div>
+        <span class="arrow">▼</span>
+      </div>
+      <div class="acc-content">
+        <div style="padding-top:14px">
+
+          <h3 class="manual-h3">🌿 このアプリは何？</h3>
+          <p class="manual-text">
+            <b>かずたんマネージャー</b>は、ふたりで使える体調記録アプリです。
+            体調や食欲、症状を気軽に記録すると、時間帯やパターンの傾向が自動で分析されます。
+          </p>
+
+          <h3 class="manual-h3">📝 記録のしかた</h3>
+
+          <h4 class="manual-h4">① 「だれの記録？」を選ぶ</h4>
+          <p class="manual-text">名前ボタンを押して、誰の記録か選んでください。「かんり」タブでメンバーを追加できます。</p>
+
+          <h4 class="manual-h4">② 「いまの体調は？」を選ぶ</h4>
+          <ul class="manual-list">
+            <li>☀️ 元気 / 🌤 まあまあ / 🌧 わるい / ⛈ つらい の4段階</li>
+          </ul>
+
+          <h4 class="manual-h4">③ 食欲メーターを選ぶ</h4>
+          <table class="manual-table">
+            <tr><th>マーク</th><th>レベル</th><th>意味</th></tr>
+            <tr><td>🍜</td><td>超いい</td><td>ラーメン求</td></tr>
+            <tr><td>🍙</td><td>ふつう</td><td>普通に米食えそう</td></tr>
+            <tr><td>😶</td><td>びわる</td><td>米ちょい険しいかも</td></tr>
+            <tr><td>🛌</td><td>きょくわる</td><td>米はむりだあ</td></tr>
+          </table>
+
+          <h4 class="manual-h4">④ 症状（複数選択OK）</h4>
+          <p class="manual-text">頭痛・腹痛・吐き気・めまい・だるい・眠気・不安・生理 から選択。複数同時に選べます。</p>
+
+          <h4 class="manual-h4">⑤ 食事タイミング</h4>
+          <p class="manual-text">食前・食後・空腹・関係なし から1つ選択。</p>
+
+          <h4 class="manual-h4">⑥ メモ</h4>
+          <p class="manual-text">自由記述。何でも書いてOK（例：天気、ストレス、食べたもの）。</p>
+
+          <h4 class="manual-h4">⑦ 「記録する」ボタンを押して完了</h4>
+
+          <h3 class="manual-h3">📚 各タブでできること</h3>
+
+          <h4 class="manual-h4">きろく</h4>
+          <p class="manual-text">体調を新規登録するメイン画面。</p>
+
+          <h4 class="manual-h4">りれき</h4>
+          <p class="manual-text">過去の記録を新しい順に一覧表示。メンバー別フィルタで切り替え可能。記録を削除することもできます。</p>
+
+          <h4 class="manual-h4">ぶんせき</h4>
+          <p class="manual-text">記録から自動で傾向を抽出して見せます（詳しくは下の「分析の仕様」を参照）。</p>
+
+          <h4 class="manual-h4">かんり</h4>
+          <p class="manual-text">メンバー追加・削除、絵文字変更、接続情報の確認、このマニュアルの閲覧ができます。</p>
+
+          <h3 class="manual-h3">💡 ちょっとしたコツ</h3>
+          <ul class="manual-list">
+            <li>毎日記録しなくてOK。「あ、ちょっとつらいな」と感じたときだけでも大丈夫</li>
+            <li>3件以上記録がたまると分析が動き始めます</li>
+            <li>1日に複数回記録してもOK（例：朝つらい、夜は元気 など）</li>
+            <li>メモには天気や生活習慣を書いておくと、後で見返したときに役立ちます</li>
+          </ul>
+
+          <h3 class="manual-h3">🔒 プライバシー</h3>
+          <ul class="manual-list">
+            <li>記録は Firebase に保存され、あいことば「みちくん」を知っている人だけが見られます</li>
+            <li>毎回起動時にあいことばが必要です</li>
+            <li>2人以外には共有しないでください</li>
+          </ul>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- 分析の仕様 -->
+    <div class="card">
+      <div class="acc-toggle" onclick="toggleAcc(this)">
+        <div class="section-title" style="margin-bottom:0">📊 分析の仕様</div>
+        <span class="arrow">▼</span>
+      </div>
+      <div class="acc-content">
+        <div style="padding-top:14px">
+
+          <p class="manual-text">
+            ぶんせきタブでは、記録データから自動で傾向を抽出します。
+            記録が <b>3件以上</b> たまると分析が表示されます。
+          </p>
+
+          <h3 class="manual-h3">🌿 見えてきたこと（インサイト）</h3>
+          <p class="manual-text">画面の一番上に表示される自動コメント。以下の要素を組み合わせて生成しています：</p>
+          <ul class="manual-list">
+            <li>記録数の合計</li>
+            <li>もっとも記録が多い時間帯</li>
+            <li>もっとも多い食欲レベル</li>
+            <li>よく出る症状トップ3</li>
+            <li>つらい記録が多い曜日（2件以上ある場合）</li>
+            <li>先週と今週の体調変化（直近2週でデータがある場合）</li>
+          </ul>
+
+          <h3 class="manual-h3">📅 カレンダー</h3>
+          <p class="manual-text">月ごとに、各日の体調をアイコンと色で表示します。</p>
+          <table class="manual-table">
+            <tr><th>色</th><th>体調</th></tr>
+            <tr><td style="background:#f2f6ef">薄緑</td><td>元気</td></tr>
+            <tr><td style="background:#fff8e8">薄黄</td><td>まあまあ</td></tr>
+            <tr><td style="background:#f4d4c5">薄橙</td><td>わるい</td></tr>
+            <tr><td style="background:#fdecea">薄赤</td><td>つらい</td></tr>
+          </table>
+          <div class="manual-callout">
+            <div class="manual-callout-title">⚠️ 1日に複数記録があったら？</div>
+            その日の<b>最新の記録</b>を表示します。前月・翌月ボタンで月を切り替えられます。
+          </div>
+
+          <h3 class="manual-h3">⏰ 時間帯ごとの記録数</h3>
+          <p class="manual-text">記録した時刻を5つの時間帯に分類して、棒グラフで表示します。</p>
+          <table class="manual-table">
+            <tr><th>時間帯</th><th>範囲</th></tr>
+            <tr><td>朝</td><td>5:00〜10:59</td></tr>
+            <tr><td>昼</td><td>11:00〜14:59</td></tr>
+            <tr><td>夕方</td><td>15:00〜18:59</td></tr>
+            <tr><td>夜</td><td>19:00〜22:59</td></tr>
+            <tr><td>深夜</td><td>23:00〜4:59</td></tr>
+          </table>
+
+          <h3 class="manual-h3">📆 曜日別 つらい記録</h3>
+          <p class="manual-text">
+            「わるい」または「つらい」と記録した日を曜日別に集計。
+            「月曜がしんどい」みたいな傾向が見えます。
+          </p>
+
+          <h3 class="manual-h3">📈 直近4週の傾向</h3>
+          <p class="manual-text">
+            今日から逆算して4週間分の体調記録を、週ごとに積み上げ棒グラフで表示。
+            色で体調レベルが分かります。
+          </p>
+          <ul class="manual-list">
+            <li>緑＝元気、黄＝まあまあ、橙＝わるい、赤＝つらい</li>
+            <li>先週と今週で「わるい・つらい」記録の数を比較してコメントを自動生成</li>
+            <li>例：「先週より体調つらい記録が減ってる ✨」</li>
+          </ul>
+
+          <h3 class="manual-h3">🔍 よくあるパターン（組み合わせ分析）</h3>
+          <p class="manual-text">3種類の組み合わせから、2回以上出てくるパターンを上位5個まで表示します：</p>
+          <ul class="manual-list">
+            <li><b>時間帯 × 食欲</b>（例：「夜は 食欲ダウン」）</li>
+            <li><b>時間帯 × 症状</b>（例：「朝に 頭痛」）</li>
+            <li><b>食事タイミング × 症状</b>（例：「食後に 腹痛」）</li>
+          </ul>
+          <div class="manual-callout">
+            <div class="manual-callout-title">🌿 なぜ2回以上？</div>
+            1回だけだと偶然の可能性が高いので、繰り返してる傾向だけを拾うようにしています。
+          </div>
+
+          <h3 class="manual-h3">👥 メンバー別フィルタ</h3>
+          <p class="manual-text">
+            画面上部の「だれの記録を見る？」で、自分・彼女どちらかを選ぶと、
+            そのメンバーの記録だけで分析されます。
+            「すべて」を選ぶと全員分まとめての分析になります。
+          </p>
+
+          <h3 class="manual-h3">⚙️ 内部の動き（おまけ）</h3>
+          <ul class="manual-list">
+            <li>分析はリアルタイム計算。記録が追加・削除されると自動で更新されます</li>
+            <li>定期取得（ポーリング）はせず、Firebaseのリスナーで変化があった時だけ通信します</li>
+            <li>無料枠を消費しにくい設計です</li>
+          </ul>
+
+        </div>
       </div>
     </div>
   </div>
@@ -1016,6 +1262,15 @@ function showToast(msg) {
   t.textContent = msg;
   t.classList.add('show');
   setTimeout(function(){ t.classList.remove('show'); }, 2500);
+}
+
+// マニュアル・分析仕様のアコーディオン
+function toggleAcc(headerEl) {
+  headerEl.classList.toggle('open');
+  var content = headerEl.nextElementSibling;
+  if (content && content.classList.contains('acc-content')) {
+    content.classList.toggle('open');
+  }
 }
 </script>
 </body>
