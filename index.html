@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>からだの記録</title>
+<title>condition-kazutan-manager</title>
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Klee+One:wght@400;600&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -171,6 +171,68 @@ textarea:focus, input:focus { outline: none; border-color: var(--accent); }
   margin-top: 8px;
   height: 18px;
 }
+
+/* カレンダー */
+.cal-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 12px;
+}
+.cal-nav-btn {
+  background: var(--bg); border: 1px solid var(--line);
+  border-radius: 8px; padding: 6px 12px; cursor: pointer;
+  font-family: inherit; font-size: 13px; color: var(--ink);
+}
+.cal-month-label { font-family: 'Klee One', serif; font-size: 15px; font-weight: 600; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+.cal-dow {
+  text-align: center; font-size: 11px; color: var(--ink-soft);
+  padding: 4px 0; font-weight: 500;
+}
+.cal-day {
+  aspect-ratio: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  border-radius: 8px; font-size: 11px;
+  background: var(--bg); border: 1px solid transparent;
+  position: relative;
+}
+.cal-day.empty { background: transparent; }
+.cal-day.today { border-color: var(--accent); font-weight: 600; }
+.cal-day-num { font-size: 11px; color: var(--ink-soft); }
+.cal-day-icon { font-size: 14px; line-height: 1; }
+.cal-day.has-data { cursor: pointer; }
+.cal-day-genki  { background: #f2f6ef; }
+.cal-day-futsuu { background: #fff8e8; }
+.cal-day-warui  { background: var(--accent-soft); }
+.cal-day-tsurai { background: #fdecea; }
+
+.cal-legend {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  margin-top: 12px; font-size: 11px; color: var(--ink-soft);
+}
+.cal-legend-item { display: flex; align-items: center; gap: 4px; }
+.cal-legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+
+/* 組み合わせ分析リスト */
+.combo-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 12px; background: var(--bg); border-radius: 10px;
+  margin-bottom: 6px; font-size: 13px;
+}
+.combo-text { color: var(--ink); }
+.combo-count {
+  font-family: 'Klee One', serif; font-weight: 600;
+  color: var(--accent); font-size: 13px;
+}
+
+/* 期間別グラフ */
+.period-bars { display: flex; align-items: flex-end; gap: 6px; height: 100px; margin-top: 12px; }
+.period-bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.period-bar-stack { width: 100%; display: flex; flex-direction: column-reverse; border-radius: 4px 4px 0 0; overflow: hidden; min-height: 2px; }
+.period-bar-seg-genki  { background: var(--sage); }
+.period-bar-seg-futsuu { background: #d4c578; }
+.period-bar-seg-warui  { background: var(--accent); }
+.period-bar-seg-tsurai { background: var(--rose); }
+.period-bar-label { font-size: 10px; color: var(--ink-soft); text-align: center; }
 </style>
 </head>
 <body>
@@ -285,6 +347,10 @@ textarea:focus, input:focus { outline: none; border-color: var(--accent); }
   </div>
 
   <div id="tab-analysis" class="hidden">
+    <div class="card">
+      <div class="section-title">だれの記録を見る？</div>
+      <div class="sub-tabs" id="analysisFilter"></div>
+    </div>
     <div id="analysisContent"><div class="card"><div class="empty">読み込み中...</div></div></div>
   </div>
 
@@ -356,6 +422,9 @@ var selectedAppetite = null;
 var selectedSymptoms = [];
 var selectedMeal = null;
 var historyFilterId = 'all';
+var analysisFilterId = 'all';
+var calendarYear = new Date().getFullYear();
+var calendarMonth = new Date().getMonth();
 var emojiTarget = null;
 
 var EMOJIS = ['🐱','🐶','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐸','🌸','🌻','🍀','🌈','⭐','🌙','☀️','❄️','🎀','💎','🍎','🍓','🍋','🍇','🎵','🎨','🏄','🌊','🗻','🌟'];
@@ -387,6 +456,7 @@ db.ref('members').on('value', function(snap) {
   renderMemberSelect();
   renderMemberListManage();
   renderHistoryFilter();
+  renderAnalysisFilter();
 }, function(err) {
   console.error('members error:', err);
   setSyncStatus('err', 'エラー: ' + err.message);
@@ -610,15 +680,56 @@ function renderHistory() {
   list.innerHTML = html;
 }
 
+function renderAnalysisFilter() {
+  var el = document.getElementById('analysisFilter');
+  if (!el) return;
+  var html = '<button class="sub-tab ' + (analysisFilterId==='all'?'active':'') + '" onclick="setAnalysisFilter(\'all\',this)">すべて</button>';
+  for (var i=0;i<members.length;i++) {
+    var m = members[i];
+    var cls = analysisFilterId===m.fbKey ? 'sub-tab active' : 'sub-tab';
+    html += '<button class="'+cls+'" onclick="setAnalysisFilter(\''+m.fbKey+'\',this)">'+(m.emoji||'👤')+' '+esc(m.name)+'</button>';
+  }
+  el.innerHTML = html;
+}
+
+function setAnalysisFilter(id, btn) {
+  analysisFilterId = id;
+  var all = document.querySelectorAll('#analysisFilter .sub-tab');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('active');
+  btn.classList.add('active');
+  renderAnalysis();
+}
+
 function renderAnalysis() {
   var content = document.getElementById('analysisContent');
-  if (records.length < 3) {
-    content.innerHTML = '<div class="card"><div class="empty">記録が3件以上たまると<br>傾向が見えてきます<br><br><span style="color:var(--accent)">いまの記録: '+records.length+'件</span></div></div>';
+
+  // フィルタ適用
+  var data = records;
+  if (analysisFilterId !== 'all') {
+    data = records.filter(function(r){return r.memberId === analysisFilterId;});
+  }
+
+  var targetLabel = '';
+  if (analysisFilterId !== 'all') {
+    for (var i=0;i<members.length;i++) {
+      if (members[i].fbKey === analysisFilterId) {
+        targetLabel = (members[i].emoji||'👤') + ' ' + members[i].name + 'の';
+        break;
+      }
+    }
+  } else {
+    targetLabel = 'みんなの';
+  }
+
+  if (data.length < 3) {
+    content.innerHTML = '<div class="card"><div class="empty">'+targetLabel+'記録が3件以上たまると<br>傾向が見えてきます<br><br><span style="color:var(--accent)">いまの記録: '+data.length+'件</span></div></div>';
     return;
   }
+
+  // ===== A. 時間帯 =====
   var slots = { '朝':0, '昼':0, '夕方':0, '夜':0, '深夜':0 };
-  for (var i=0;i<records.length;i++) {
-    var h = new Date(records[i].timestamp).getHours();
+  for (var i=0;i<data.length;i++) {
+    var h = new Date(data[i].timestamp).getHours();
     if(h>=5&&h<=10) slots['朝']++; else if(h>=11&&h<=14) slots['昼']++;
     else if(h>=15&&h<=18) slots['夕方']++; else if(h>=19&&h<=22) slots['夜']++;
     else slots['深夜']++;
@@ -626,16 +737,6 @@ function renderAnalysis() {
   var maxSlotKey='朝', maxSlotVal=0;
   for(var k in slots){if(slots[k]>maxSlotVal){maxSlotVal=slots[k];maxSlotKey=k;}}
   var maxBar = Math.max(maxSlotVal, 1);
-  var apCount = { choo:0, futsuu:0, biwaru:0, kyokuwaru:0 };
-  for(var i=0;i<records.length;i++){if(records[i].appetite)apCount[records[i].appetite]++;}
-  var topApKey='choo',topApVal=0;
-  for(var k in apCount){if(apCount[k]>topApVal){topApVal=apCount[k];topApKey=k;}}
-  var symCount = {};
-  for(var i=0;i<records.length;i++){var ss=records[i].symptoms||[];for(var j=0;j<ss.length;j++){symCount[ss[j]]=(symCount[ss[j]]||0)+1;}}
-  var topSymArr = [];
-  for(var k in symCount) topSymArr.push([k,symCount[k]]);
-  topSymArr.sort(function(a,b){return b[1]-a[1];});
-  topSymArr = topSymArr.slice(0,3);
   var barHtml = '';
   var slotKeys = ['朝','昼','夕方','夜','深夜'];
   for(var i=0;i<slotKeys.length;i++){
@@ -643,26 +744,239 @@ function renderAnalysis() {
     barHtml += '<div class="bar-col"><div class="bar" style="height:'+(sv/maxBar*68)+'px"></div>' +
       '<div class="bar-label">'+sk+'</div><div class="bar-label" style="font-weight:600;color:var(--ink)">'+sv+'</div></div>';
   }
-  var memberStatsHtml = '';
-  for(var i=0;i<members.length;i++){
-    var m=members[i], cnt=0;
-    for(var j=0;j<records.length;j++){if(records[j].memberId===m.fbKey)cnt++;}
-    if(cnt>0) memberStatsHtml += '<div class="stat-row"><span class="stat-label">'+(m.emoji||'👤')+' '+esc(m.name)+'</span><span class="stat-value">'+cnt+'件</span></div>';
+
+  // ===== 食欲・症状 =====
+  var apCount = { choo:0, futsuu:0, biwaru:0, kyokuwaru:0 };
+  for(var i=0;i<data.length;i++){if(data[i].appetite)apCount[data[i].appetite]++;}
+  var topApKey='choo',topApVal=0;
+  for(var k in apCount){if(apCount[k]>topApVal){topApVal=apCount[k];topApKey=k;}}
+  var symCount = {};
+  for(var i=0;i<data.length;i++){var ss=data[i].symptoms||[];for(var j=0;j<ss.length;j++){symCount[ss[j]]=(symCount[ss[j]]||0)+1;}}
+  var topSymArr = [];
+  for(var k in symCount) topSymArr.push([k,symCount[k]]);
+  topSymArr.sort(function(a,b){return b[1]-a[1];});
+  topSymArr = topSymArr.slice(0,3);
+
+  // ===== B. 曜日別 =====
+  var dowCounts = [0,0,0,0,0,0,0]; // 日〜土
+  var dowBadCounts = [0,0,0,0,0,0,0]; // わるい/つらい のみ
+  for (var i=0;i<data.length;i++) {
+    var dow = new Date(data[i].timestamp).getDay();
+    dowCounts[dow]++;
+    if (data[i].cond === 'warui' || data[i].cond === 'tsurai') dowBadCounts[dow]++;
   }
+  var dowNames = ['日','月','火','水','木','金','土'];
+  var maxDowBad = Math.max.apply(null, dowBadCounts.concat([1]));
+  var dowHtml = '';
+  for (var i=0;i<7;i++) {
+    var ratio = dowBadCounts[i] / maxDowBad;
+    dowHtml += '<div class="bar-col">' +
+      '<div class="bar" style="height:'+(ratio*68)+'px;background:linear-gradient(to top, var(--rose), var(--accent-soft))"></div>' +
+      '<div class="bar-label">'+dowNames[i]+'</div>' +
+      '<div class="bar-label" style="font-weight:600;color:var(--ink)">'+dowBadCounts[i]+'</div>' +
+      '</div>';
+  }
+  // 曜日 worst 計算
+  var worstDow = 0, worstDowVal = 0;
+  for (var i=0;i<7;i++) { if (dowBadCounts[i] > worstDowVal) { worstDowVal = dowBadCounts[i]; worstDow = i; } }
+
+  // ===== A. 組み合わせ分析 =====
+  // 時間帯×食欲、時間帯×症状、食事×症状
+  var combos = {};
+  function addCombo(key) { combos[key] = (combos[key]||0) + 1; }
+  for (var i=0;i<data.length;i++) {
+    var r = data[i];
+    var h = new Date(r.timestamp).getHours();
+    var slot = (h>=5&&h<=10)?'朝':(h>=11&&h<=14)?'昼':(h>=15&&h<=18)?'夕方':(h>=19&&h<=22)?'夜':'深夜';
+
+    if (r.appetite && r.appetite !== 'futsuu') {
+      var apJp = {choo:'食欲MAX', biwaru:'食欲ダウン', kyokuwaru:'食欲ゼロ'}[r.appetite];
+      if (apJp) addCombo(slot + 'は ' + apJp);
+    }
+    if (r.symptoms && r.symptoms.length) {
+      for (var j=0;j<r.symptoms.length;j++) {
+        addCombo(slot + 'に ' + r.symptoms[j]);
+        if (r.meal && r.meal !== '関係なし') {
+          addCombo(r.meal + 'に ' + r.symptoms[j]);
+        }
+      }
+    }
+  }
+  var comboArr = [];
+  for (var k in combos) if (combos[k] >= 2) comboArr.push([k, combos[k]]);
+  comboArr.sort(function(a,b){return b[1]-a[1];});
+  comboArr = comboArr.slice(0, 5);
+  var comboHtml = '';
+  if (comboArr.length) {
+    for (var i=0;i<comboArr.length;i++) {
+      comboHtml += '<div class="combo-row"><span class="combo-text">'+esc(comboArr[i][0])+'</span><span class="combo-count">'+comboArr[i][1]+'回</span></div>';
+    }
+  } else {
+    comboHtml = '<div style="font-size:13px;color:var(--ink-soft);padding:8px 0">記録が増えると、よくあるパターンが見えてきます</div>';
+  }
+
+  // ===== C. 期間別の変化（直近4週間） =====
+  var now = new Date();
+  var weekData = [
+    { label:'3週前', genki:0, futsuu:0, warui:0, tsurai:0 },
+    { label:'2週前', genki:0, futsuu:0, warui:0, tsurai:0 },
+    { label:'先週',  genki:0, futsuu:0, warui:0, tsurai:0 },
+    { label:'今週',  genki:0, futsuu:0, warui:0, tsurai:0 }
+  ];
+  for (var i=0;i<data.length;i++) {
+    var rd = new Date(data[i].timestamp);
+    var diffDays = Math.floor((now - rd) / (1000*60*60*24));
+    var weekIdx = -1;
+    if (diffDays < 7) weekIdx = 3;
+    else if (diffDays < 14) weekIdx = 2;
+    else if (diffDays < 21) weekIdx = 1;
+    else if (diffDays < 28) weekIdx = 0;
+    if (weekIdx >= 0 && data[i].cond) weekData[weekIdx][data[i].cond]++;
+  }
+  var maxWeekTotal = 1;
+  for (var i=0;i<weekData.length;i++) {
+    var t = weekData[i].genki + weekData[i].futsuu + weekData[i].warui + weekData[i].tsurai;
+    if (t > maxWeekTotal) maxWeekTotal = t;
+  }
+  var periodHtml = '<div class="period-bars">';
+  for (var i=0;i<weekData.length;i++) {
+    var w = weekData[i];
+    var totalH = ((w.genki + w.futsuu + w.warui + w.tsurai) / maxWeekTotal) * 84;
+    var unitH = totalH / Math.max(w.genki + w.futsuu + w.warui + w.tsurai, 1);
+    periodHtml += '<div class="period-bar-col">' +
+      '<div class="period-bar-stack" style="height:'+totalH+'px">' +
+        (w.genki  ? '<div class="period-bar-seg-genki"  style="height:'+(w.genki*unitH)+'px"></div>' : '') +
+        (w.futsuu ? '<div class="period-bar-seg-futsuu" style="height:'+(w.futsuu*unitH)+'px"></div>' : '') +
+        (w.warui  ? '<div class="period-bar-seg-warui"  style="height:'+(w.warui*unitH)+'px"></div>' : '') +
+        (w.tsurai ? '<div class="period-bar-seg-tsurai" style="height:'+(w.tsurai*unitH)+'px"></div>' : '') +
+      '</div>' +
+      '<div class="period-bar-label">'+w.label+'</div>' +
+      '<div class="period-bar-label" style="font-weight:600;color:var(--ink)">'+(w.genki+w.futsuu+w.warui+w.tsurai)+'</div>' +
+      '</div>';
+  }
+  periodHtml += '</div>' +
+    '<div class="cal-legend">' +
+      '<div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--sage)"></div>元気</div>' +
+      '<div class="cal-legend-item"><div class="cal-legend-dot" style="background:#d4c578"></div>まあまあ</div>' +
+      '<div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--accent)"></div>わるい</div>' +
+      '<div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--rose)"></div>つらい</div>' +
+    '</div>';
+
+  // 今週 vs 先週コメント
+  var thisW = weekData[3].warui + weekData[3].tsurai;
+  var lastW = weekData[2].warui + weekData[2].tsurai;
+  var trendComment = '';
+  if (lastW >= 2) {
+    if (thisW < lastW) trendComment = '先週より体調つらい記録が減ってる ✨';
+    else if (thisW > lastW) trendComment = '先週より体調つらい記録が増えてる…ゆっくりね';
+    else trendComment = '先週とだいたい同じくらい';
+  }
+
+  // ===== E. カレンダー =====
+  var calHtml = renderCalendarHtml(data);
+
+  // メンバー別記録数
+  var memberStatsHtml = '';
+  if (analysisFilterId === 'all') {
+    for(var i=0;i<members.length;i++){
+      var m=members[i], cnt=0;
+      for(var j=0;j<records.length;j++){if(records[j].memberId===m.fbKey)cnt++;}
+      if(cnt>0) memberStatsHtml += '<div class="stat-row"><span class="stat-label">'+(m.emoji||'👤')+' '+esc(m.name)+'</span><span class="stat-value">'+cnt+'件</span></div>';
+    }
+  }
+
+  // ===== 描画 =====
   content.innerHTML =
     '<div class="insight"><div class="insight-title">🌿 見えてきたこと</div><div>' +
-    records.length + '件の記録より、<b>' + maxSlotKey + '</b>によく記録している。' +
+    targetLabel + data.length + '件の記録より、<b>' + maxSlotKey + '</b>によく記録している。' +
     (topApVal>0 ? '食欲は<b>'+AP_NAME_MAP[topApKey]+'</b>が多いみたい。' : '') +
     (topSymArr.length ? 'よく出る症状は<b>'+topSymArr.map(function(s){return s[0];}).join('、')+'</b>。' : '') +
+    (worstDowVal >= 2 ? '<br><b>'+dowNames[worstDow]+'曜日</b>はちょっとしんどい日が多いかも。' : '') +
+    (trendComment ? '<br>'+trendComment : '') +
     '</div></div>' +
-    '<div class="card"><div class="section-title">時間帯グラフ</div><div class="bar-chart">'+barHtml+'</div></div>' +
+
+    '<div class="card"><div class="section-title">📅 カレンダー</div>'+calHtml+'</div>' +
+
+    '<div class="card"><div class="section-title">⏰ 時間帯ごとの記録数</div><div class="bar-chart">'+barHtml+'</div></div>' +
+
+    '<div class="card"><div class="section-title">📆 曜日別 つらい記録</div><div class="bar-chart">'+dowHtml+'</div>' +
+    '<div style="font-size:11px;color:var(--ink-soft);margin-top:8px;text-align:center">「わるい」「つらい」の合計</div></div>' +
+
+    '<div class="card"><div class="section-title">📈 直近4週の傾向</div>'+periodHtml+'</div>' +
+
+    '<div class="card"><div class="section-title">🔍 よくあるパターン</div>'+comboHtml+'</div>' +
+
     (memberStatsHtml ? '<div class="card"><div class="section-title">メンバー別記録数</div>'+memberStatsHtml+'</div>' : '') +
+
     '<div class="card"><div class="section-title">傾向まとめ</div>' +
     '<div class="stat-row"><span class="stat-label">多い時間帯</span><span class="stat-value">'+maxSlotKey+'</span></div>' +
     (topApVal>0 ? '<div class="stat-row"><span class="stat-label">よくある食欲</span><span class="stat-value">'+AP_NAME_MAP[topApKey]+'</span></div>' : '') +
     (topSymArr.length ? '<div class="stat-row"><span class="stat-label">多い症状</span><span class="stat-value">'+topSymArr[0][0]+'</span></div>' : '') +
-    '<div class="stat-row"><span class="stat-label">合計記録数</span><span class="stat-value">'+records.length+'件</span></div>' +
+    '<div class="stat-row"><span class="stat-label">記録数</span><span class="stat-value">'+data.length+'件</span></div>' +
     '</div>';
+}
+
+// ===== カレンダー描画 =====
+function renderCalendarHtml(data) {
+  var year = calendarYear;
+  var month = calendarMonth;
+  var firstDay = new Date(year, month, 1).getDay();
+  var lastDate = new Date(year, month+1, 0).getDate();
+  var today = new Date();
+
+  // 日ごとに体調集計（その日の最悪を採用）
+  var condRank = { genki:1, futsuu:2, warui:3, tsurai:4 };
+  var condClass = { genki:'cal-day-genki', futsuu:'cal-day-futsuu', warui:'cal-day-warui', tsurai:'cal-day-tsurai' };
+  var condEmoji = { genki:'☀️', futsuu:'🌤', warui:'🌧', tsurai:'⛈' };
+  var dayMap = {};
+  for (var i=0;i<data.length;i++) {
+    var d = new Date(data[i].timestamp);
+    if (d.getFullYear() !== year || d.getMonth() !== month) continue;
+    var date = d.getDate();
+    if (!data[i].cond) continue;
+    if (!dayMap[date] || condRank[data[i].cond] > condRank[dayMap[date]]) {
+      dayMap[date] = data[i].cond;
+    }
+  }
+
+  var monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  var html = '<div class="cal-header">' +
+    '<button class="cal-nav-btn" onclick="changeCalendarMonth(-1)">◀ 前月</button>' +
+    '<span class="cal-month-label">'+year+'年 '+monthNames[month]+'</span>' +
+    '<button class="cal-nav-btn" onclick="changeCalendarMonth(1)">翌月 ▶</button>' +
+    '</div>';
+
+  html += '<div class="cal-grid">';
+  var dows = ['日','月','火','水','木','金','土'];
+  for (var i=0;i<7;i++) html += '<div class="cal-dow">'+dows[i]+'</div>';
+
+  for (var i=0;i<firstDay;i++) html += '<div class="cal-day empty"></div>';
+
+  for (var d=1; d<=lastDate; d++) {
+    var cls = 'cal-day';
+    if (dayMap[d]) cls += ' has-data ' + condClass[dayMap[d]];
+    if (year === today.getFullYear() && month === today.getMonth() && d === today.getDate()) cls += ' today';
+    html += '<div class="'+cls+'">' +
+      '<span class="cal-day-num">'+d+'</span>' +
+      (dayMap[d] ? '<span class="cal-day-icon">'+condEmoji[dayMap[d]]+'</span>' : '') +
+      '</div>';
+  }
+  html += '</div>';
+
+  html += '<div class="cal-legend">' +
+    '<div class="cal-legend-item"><div class="cal-legend-dot cal-day-genki"></div>元気</div>' +
+    '<div class="cal-legend-item"><div class="cal-legend-dot cal-day-futsuu"></div>まあまあ</div>' +
+    '<div class="cal-legend-item"><div class="cal-legend-dot cal-day-warui"></div>わるい</div>' +
+    '<div class="cal-legend-item"><div class="cal-legend-dot cal-day-tsurai"></div>つらい</div>' +
+    '</div>';
+  return html;
+}
+
+function changeCalendarMonth(diff) {
+  calendarMonth += diff;
+  if (calendarMonth < 0) { calendarMonth = 11; calendarYear--; }
+  else if (calendarMonth > 11) { calendarMonth = 0; calendarYear++; }
+  renderAnalysis();
 }
 
 function showTab(target) {
@@ -671,7 +985,7 @@ function showTab(target) {
   var ids = ['record','history','analysis','settings'];
   for(var i=0;i<ids.length;i++) document.getElementById('tab-'+ids[i]).classList.toggle('hidden', ids[i]!==target);
   if (target==='history') { renderHistoryFilter(); renderHistory(); }
-  if (target==='analysis') renderAnalysis();
+  if (target==='analysis') { renderAnalysisFilter(); renderAnalysis(); }
   if (target==='settings') renderMemberListManage();
 }
 
