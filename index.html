@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -113,204 +114,251 @@ textarea:focus, input:focus { outline: none; border-color: var(--accent); }
 
 /* ロック画面 */
 #lockScreen {
-  position: fixed; inset: 0; z-index: 999;
-  background: var(--bg);
-  display: flex; align-items: center; justify-content: center;
-  padding: 20px;
-  background-image:
-    radial-gradient(circle at 20% 30%, rgba(217,119,87,.08) 0%, transparent 50%),
-    radial-gradient(circle at 80% 70%, rgba(138,154,123,.06) 0%, transparent 50%);
+position: fixed; inset: 0; z-index: 999;
+background: var(–bg);
+display: flex; align-items: center; justify-content: center;
+padding: 20px;
+background-image:
+radial-gradient(circle at 20% 30%, rgba(217,119,87,.08) 0%, transparent 50%),
+radial-gradient(circle at 80% 70%, rgba(138,154,123,.06) 0%, transparent 50%);
 }
 .lock-card {
-  background: var(--bg-card);
-  border-radius: 20px;
-  padding: 36px 28px;
-  max-width: 360px;
-  width: 100%;
-  border: 1px solid var(--line);
-  text-align: center;
+background: var(–bg-card);
+border-radius: 20px;
+padding: 36px 28px;
+max-width: 360px;
+width: 100%;
+border: 1px solid var(–line);
+text-align: center;
 }
 .lock-emoji { font-size: 42px; margin-bottom: 14px; }
 .lock-title {
-  font-family: 'Klee One', serif;
-  font-size: 22px;
-  font-weight: 600;
-  color: var(--ink);
-  margin-bottom: 6px;
+font-family: ‘Klee One’, serif;
+font-size: 22px;
+font-weight: 600;
+color: var(–ink);
+margin-bottom: 6px;
 }
-.lock-subtitle { font-size: 13px; color: var(--ink-soft); margin-bottom: 26px; }
+.lock-subtitle { font-size: 13px; color: var(–ink-soft); margin-bottom: 26px; }
 .lock-input {
-  width: 100%;
-  padding: 14px 16px;
-  border: 2px solid var(--line);
-  border-radius: 14px;
-  font-family: inherit;
-  font-size: 16px;
-  background: var(--bg);
-  color: var(--ink);
-  text-align: center;
-  margin-bottom: 12px;
+width: 100%;
+padding: 14px 16px;
+border: 2px solid var(–line);
+border-radius: 14px;
+font-family: inherit;
+font-size: 16px;
+background: var(–bg);
+color: var(–ink);
+text-align: center;
+margin-bottom: 12px;
 }
-.lock-input:focus { outline: none; border-color: var(--accent); }
+.lock-input:focus { outline: none; border-color: var(–accent); }
 .lock-btn {
-  width: 100%;
-  padding: 14px;
-  background: linear-gradient(135deg, var(--accent) 0%, var(--rose) 100%);
-  color: white;
-  border: none;
-  border-radius: 14px;
-  font-family: inherit;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  letter-spacing: .05em;
+width: 100%;
+padding: 14px;
+background: linear-gradient(135deg, var(–accent) 0%, var(–rose) 100%);
+color: white;
+border: none;
+border-radius: 14px;
+font-family: inherit;
+font-size: 15px;
+font-weight: 600;
+cursor: pointer;
+letter-spacing: .05em;
 }
 .lock-btn:active { transform: scale(.97); }
 .lock-error {
-  font-size: 13px;
-  color: var(--rose);
-  margin-top: 8px;
-  height: 18px;
+font-size: 13px;
+color: var(–rose);
+margin-top: 8px;
+height: 18px;
 }
 
 /* カレンダー */
 .cal-header {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 12px;
+display: flex; justify-content: space-between; align-items: center;
+margin-bottom: 12px;
 }
 .cal-nav-btn {
-  background: var(--bg); border: 1px solid var(--line);
-  border-radius: 8px; padding: 6px 12px; cursor: pointer;
-  font-family: inherit; font-size: 13px; color: var(--ink);
+background: var(–bg); border: 1px solid var(–line);
+border-radius: 8px; padding: 6px 12px; cursor: pointer;
+font-family: inherit; font-size: 13px; color: var(–ink);
 }
-.cal-month-label { font-family: 'Klee One', serif; font-size: 15px; font-weight: 600; }
+.cal-month-label { font-family: ‘Klee One’, serif; font-size: 15px; font-weight: 600; }
 .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
 .cal-dow {
-  text-align: center; font-size: 11px; color: var(--ink-soft);
-  padding: 4px 0; font-weight: 500;
+text-align: center; font-size: 11px; color: var(–ink-soft);
+padding: 4px 0; font-weight: 500;
 }
 .cal-day {
-  min-height: 44px; display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  border-radius: 8px; font-size: 11px; padding: 4px 2px;
-  background: var(--bg); border: 1px solid transparent;
-  position: relative; box-sizing: border-box;
-  overflow: hidden;
+min-height: 44px; display: flex; flex-direction: column;
+align-items: center; justify-content: center;
+border-radius: 8px; font-size: 11px; padding: 4px 2px;
+background: var(–bg); border: 1px solid transparent;
+position: relative; box-sizing: border-box;
+overflow: hidden;
 }
 .cal-day.empty { background: transparent; }
-.cal-day.today { border-color: var(--accent); font-weight: 600; }
-.cal-day-num { font-size: 11px; color: var(--ink-soft); }
+.cal-day.today { border-color: var(–accent); font-weight: 600; }
+.cal-day-num { font-size: 11px; color: var(–ink-soft); }
 .cal-day-icon { font-size: 14px; line-height: 1; }
 .cal-day.has-data { cursor: pointer; }
 .cal-day-genki  { background: #f2f6ef; }
 .cal-day-futsuu { background: #fff8e8; }
-.cal-day-warui  { background: var(--accent-soft); }
+.cal-day-warui  { background: var(–accent-soft); }
 .cal-day-tsurai { background: #fdecea; }
 
 .cal-legend {
-  display: flex; gap: 10px; flex-wrap: wrap;
-  margin-top: 12px; font-size: 11px; color: var(--ink-soft);
+display: flex; gap: 10px; flex-wrap: wrap;
+margin-top: 12px; font-size: 11px; color: var(–ink-soft);
 }
 .cal-legend-item { display: flex; align-items: center; gap: 4px; }
 .cal-legend-dot { width: 12px; height: 12px; border-radius: 3px; }
 
 /* 組み合わせ分析リスト */
 .combo-row {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 8px 12px; background: var(--bg); border-radius: 10px;
-  margin-bottom: 6px; font-size: 13px;
+display: flex; justify-content: space-between; align-items: center;
+padding: 8px 12px; background: var(–bg); border-radius: 10px;
+margin-bottom: 6px; font-size: 13px;
 }
-.combo-text { color: var(--ink); }
+.combo-text { color: var(–ink); }
 .combo-count {
-  font-family: 'Klee One', serif; font-weight: 600;
-  color: var(--accent); font-size: 13px;
+font-family: ‘Klee One’, serif; font-weight: 600;
+color: var(–accent); font-size: 13px;
 }
 
 /* 期間別グラフ */
 .period-bars { display: flex; align-items: flex-end; gap: 6px; height: 100px; margin-top: 12px; }
 .period-bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; }
 .period-bar-stack { width: 100%; display: flex; flex-direction: column-reverse; border-radius: 4px 4px 0 0; overflow: hidden; min-height: 2px; }
-.period-bar-seg-genki  { background: var(--sage); }
+.period-bar-seg-genki  { background: var(–sage); }
 .period-bar-seg-futsuu { background: #d4c578; }
-.period-bar-seg-warui  { background: var(--accent); }
-.period-bar-seg-tsurai { background: var(--rose); }
-.period-bar-label { font-size: 10px; color: var(--ink-soft); text-align: center; }
+.period-bar-seg-warui  { background: var(–accent); }
+.period-bar-seg-tsurai { background: var(–rose); }
+.period-bar-label { font-size: 10px; color: var(–ink-soft); text-align: center; }
 
 /* マニュアル・仕様セクション */
 .manual-section { margin-bottom: 18px; }
 .manual-h3 {
-  font-family: 'Klee One', serif;
-  font-size: 14px; font-weight: 600; color: var(--accent);
-  margin: 16px 0 8px;
-  padding: 6px 10px;
-  background: var(--accent-soft);
-  border-radius: 8px;
-  display: inline-block;
+font-family: ‘Klee One’, serif;
+font-size: 14px; font-weight: 600; color: var(–accent);
+margin: 16px 0 8px;
+padding: 6px 10px;
+background: var(–accent-soft);
+border-radius: 8px;
+display: inline-block;
 }
 .manual-h4 {
-  font-size: 13px; font-weight: 600; color: var(--ink);
-  margin: 12px 0 6px;
+font-size: 13px; font-weight: 600; color: var(–ink);
+margin: 12px 0 6px;
 }
 .manual-text {
-  font-size: 13px; color: var(--ink); line-height: 1.8;
-  margin-bottom: 8px;
+font-size: 13px; color: var(–ink); line-height: 1.8;
+margin-bottom: 8px;
 }
-.manual-text b { color: var(--rose); }
+.manual-text b { color: var(–rose); }
 .manual-list { list-style: none; padding: 0; margin: 6px 0; }
 .manual-list li {
-  font-size: 13px; color: var(--ink); line-height: 1.7;
-  padding: 4px 0 4px 16px; position: relative;
+font-size: 13px; color: var(–ink); line-height: 1.7;
+padding: 4px 0 4px 16px; position: relative;
 }
 .manual-list li::before {
-  content: '🌿'; position: absolute; left: 0; font-size: 10px;
+content: ‘🌿’; position: absolute; left: 0; font-size: 10px;
 }
 .manual-table {
-  width: 100%; border-collapse: collapse;
-  font-size: 12px; margin: 8px 0;
-  background: var(--bg); border-radius: 8px; overflow: hidden;
+width: 100%; border-collapse: collapse;
+font-size: 12px; margin: 8px 0;
+background: var(–bg); border-radius: 8px; overflow: hidden;
 }
 .manual-table th, .manual-table td {
-  padding: 8px 10px; text-align: left;
-  border-bottom: 1px solid var(--line);
+padding: 8px 10px; text-align: left;
+border-bottom: 1px solid var(–line);
 }
 .manual-table th {
-  background: var(--accent-soft); color: var(--accent);
-  font-weight: 600; font-size: 12px;
+background: var(–accent-soft); color: var(–accent);
+font-weight: 600; font-size: 12px;
 }
 .manual-table tr:last-child td { border-bottom: none; }
 .manual-callout {
-  background: var(--accent-soft); border-radius: 10px;
-  padding: 10px 14px; margin: 8px 0;
-  font-size: 12px; color: var(--ink); line-height: 1.7;
+background: var(–accent-soft); border-radius: 10px;
+padding: 10px 14px; margin: 8px 0;
+font-size: 12px; color: var(–ink); line-height: 1.7;
 }
 .manual-callout-title {
-  font-weight: 600; color: var(--rose);
-  margin-bottom: 4px; font-size: 13px;
+font-weight: 600; color: var(–rose);
+margin-bottom: 4px; font-size: 13px;
 }
 
 /* アコーディオン */
 .acc-toggle {
-  display: flex; align-items: center; justify-content: space-between;
-  cursor: pointer; user-select: none;
-  padding: 4px 0;
+display: flex; align-items: center; justify-content: space-between;
+cursor: pointer; user-select: none;
+padding: 4px 0;
 }
 .acc-toggle .arrow {
-  font-size: 12px; color: var(--ink-soft);
-  transition: transform .2s;
+font-size: 12px; color: var(–ink-soft);
+transition: transform .2s;
 }
 .acc-toggle.open .arrow { transform: rotate(180deg); }
 .acc-content {
-  max-height: 0; overflow: hidden;
-  transition: max-height .3s ease;
+max-height: 0; overflow: hidden;
+transition: max-height .3s ease;
 }
 .acc-content.open {
-  max-height: 5000px;
+max-height: 5000px;
 }
+
+/* 編集ボタン */
+.edit-btn {
+background: none; border: none; color: #ccc;
+font-size: 14px; cursor: pointer; padding: 4px;
+}
+.edit-btn:hover { color: var(–accent); }
+
+/* 編集モーダル */
+.edit-overlay {
+position: fixed; inset: 0; background: rgba(0,0,0,.5);
+z-index: 500; display: flex; align-items: flex-end; justify-content: center;
+}
+.edit-modal {
+background: var(–bg); border-radius: 24px 24px 0 0;
+width: 100%; max-width: 480px; max-height: 90vh;
+padding: 24px 18px 30px; overflow-y: auto;
+}
+.edit-modal-header {
+display: flex; justify-content: space-between; align-items: center;
+margin-bottom: 16px;
+}
+.edit-modal-title {
+font-family: ‘Klee One’, serif; font-size: 17px; font-weight: 600;
+}
+.edit-modal-close {
+background: none; border: none; font-size: 24px; cursor: pointer;
+color: var(–ink-soft); padding: 0; line-height: 1;
+}
+.edit-modal-section {
+background: var(–bg-card); border-radius: 14px;
+padding: 14px; margin-bottom: 10px; border: 1px solid var(–line);
+}
+.edit-modal-label {
+font-size: 12px; color: var(–ink-soft); margin-bottom: 8px;
+font-weight: 500; display: block;
+}
+.edit-save-btn {
+width: 100%; padding: 14px;
+background: linear-gradient(135deg, var(–accent) 0%, var(–rose) 100%);
+color: white; border: none; border-radius: 14px;
+font-family: inherit; font-size: 15px; font-weight: 600;
+cursor: pointer; margin-top: 8px;
+}
+.edit-save-btn:active { transform: scale(.98); }
 </style>
+
 </head>
 <body>
 
 <!-- ロック画面 -->
+
 <div id="lockScreen">
   <div class="lock-card">
     <div class="lock-emoji">🌿</div>
@@ -358,57 +406,62 @@ textarea:focus, input:focus { outline: none; border-color: var(--accent); }
       </div>
     </div>
 
-    <div class="card">
-      <div class="section-title">いまの体調は？</div>
-      <div class="cond-row">
-        <button class="cond-btn" data-cond="genki" onclick="selectCond(this)"><span class="cb-emoji">☀️</span>元気</button>
-        <button class="cond-btn" data-cond="futsuu" onclick="selectCond(this)"><span class="cb-emoji">🌤</span>まあまあ</button>
-        <button class="cond-btn" data-cond="warui" onclick="selectCond(this)"><span class="cb-emoji">🌧</span>わるい</button>
-        <button class="cond-btn" data-cond="tsurai" onclick="selectCond(this)"><span class="cb-emoji">⛈</span>つらい</button>
-      </div>
-    </div>
+```
+<div class="card">
+  <div class="section-title">いまの体調は？</div>
+  <div class="cond-row">
+    <button class="cond-btn" data-cond="genki" onclick="selectCond(this)"><span class="cb-emoji">☀️</span>元気</button>
+    <button class="cond-btn" data-cond="futsuu" onclick="selectCond(this)"><span class="cb-emoji">🌤</span>まあまあ</button>
+    <button class="cond-btn" data-cond="warui" onclick="selectCond(this)"><span class="cb-emoji">🌧</span>わるい</button>
+    <button class="cond-btn" data-cond="tsurai" onclick="selectCond(this)"><span class="cb-emoji">⛈</span>つらい</button>
+  </div>
+</div>
 
-    <div class="card">
-      <div class="section-title">🍚 食欲メーター</div>
-      <div class="appetite-grid">
-        <button class="appetite-btn" data-ap="choo" onclick="selectAppetite(this)"><span class="ap-emoji">🍜</span><span class="ap-label">超いい</span><span class="ap-desc">ラーメン求</span></button>
-        <button class="appetite-btn" data-ap="futsuu" onclick="selectAppetite(this)"><span class="ap-emoji">🍙</span><span class="ap-label">ふつう</span><span class="ap-desc">普通に米食えそう</span></button>
-        <button class="appetite-btn" data-ap="biwaru" onclick="selectAppetite(this)"><span class="ap-emoji">😶</span><span class="ap-label">びわる</span><span class="ap-desc">米ちょい険しいかも</span></button>
-        <button class="appetite-btn" data-ap="kyokuwaru" onclick="selectAppetite(this)"><span class="ap-emoji">🛌</span><span class="ap-label">きょくわる</span><span class="ap-desc">米はむりだあ</span></button>
-      </div>
-    </div>
+<div class="card">
+  <div class="section-title">🍚 食欲メーター</div>
+  <div class="appetite-grid">
+    <button class="appetite-btn" data-ap="choo" onclick="selectAppetite(this)"><span class="ap-emoji">🍜</span><span class="ap-label">超いい</span><span class="ap-desc">ラーメン求</span></button>
+    <button class="appetite-btn" data-ap="futsuu" onclick="selectAppetite(this)"><span class="ap-emoji">🍙</span><span class="ap-label">ふつう</span><span class="ap-desc">普通に米食えそう</span></button>
+    <button class="appetite-btn" data-ap="biwaru" onclick="selectAppetite(this)"><span class="ap-emoji">😶</span><span class="ap-label">びわる</span><span class="ap-desc">米ちょい険しいかも</span></button>
+    <button class="appetite-btn" data-ap="kyokuwaru" onclick="selectAppetite(this)"><span class="ap-emoji">🛌</span><span class="ap-label">きょくわる</span><span class="ap-desc">米はむりだあ</span></button>
+  </div>
+</div>
 
-    <div class="card">
-      <div class="form-group">
-        <label class="label">症状（複数えらべます）</label>
-        <div class="chip-group">
-          <button class="chip" data-val="頭痛" onclick="toggleChip(this)">頭痛</button>
-          <button class="chip" data-val="腹痛" onclick="toggleChip(this)">腹痛</button>
-          <button class="chip" data-val="吐き気" onclick="toggleChip(this)">吐き気</button>
-          <button class="chip" data-val="めまい" onclick="toggleChip(this)">めまい</button>
-          <button class="chip" data-val="だるい" onclick="toggleChip(this)">だるい</button>
-          <button class="chip" data-val="眠気" onclick="toggleChip(this)">眠気</button>
-          <button class="chip" data-val="不安" onclick="toggleChip(this)">不安</button>
-          <button class="chip" data-val="生理" onclick="toggleChip(this)">生理</button>
-        </div>
-      </div>
-      <div class="form-group" style="margin-bottom:0">
-        <label class="label">食事タイミング</label>
-        <div class="chip-group" id="mealGroup">
-          <button class="chip" data-val="食前" onclick="selectSingle(this)">食前</button>
-          <button class="chip" data-val="食後" onclick="selectSingle(this)">食後</button>
-          <button class="chip" data-val="空腹" onclick="selectSingle(this)">空腹</button>
-          <button class="chip" data-val="関係なし" onclick="selectSingle(this)">関係なし</button>
-        </div>
-      </div>
+<div class="card">
+  <div class="form-group">
+    <label class="label">症状（複数えらべます）</label>
+    <div class="chip-group">
+      <button class="chip" data-val="頭痛" onclick="toggleChip(this)">頭痛</button>
+      <button class="chip" data-val="腹痛" onclick="toggleChip(this)">腹痛</button>
+      <button class="chip" data-val="お腹パンパン" onclick="toggleChip(this)">お腹パンパン</button>
+      <button class="chip" data-val="ゲップ" onclick="toggleChip(this)">ゲップ</button>
+      <button class="chip" data-val="吐き気" onclick="toggleChip(this)">吐き気</button>
+      <button class="chip" data-val="めまい" onclick="toggleChip(this)">めまい</button>
+      <button class="chip" data-val="だるい" onclick="toggleChip(this)">だるい</button>
+      <button class="chip" data-val="眠気" onclick="toggleChip(this)">眠気</button>
+      <button class="chip" data-val="不安" onclick="toggleChip(this)">不安</button>
+      <button class="chip" data-val="生理" onclick="toggleChip(this)">生理</button>
     </div>
-
-    <div class="card">
-      <div class="section-title">📝 メモ</div>
-      <textarea id="noteInput" placeholder="今日どんな一日だったか、気になること、なんでも"></textarea>
+  </div>
+  <div class="form-group" style="margin-bottom:0">
+    <label class="label">食事タイミング</label>
+    <div class="chip-group" id="mealGroup">
+      <button class="chip" data-val="食前" onclick="selectSingle(this)">食前</button>
+      <button class="chip" data-val="食後" onclick="selectSingle(this)">食後</button>
+      <button class="chip" data-val="空腹" onclick="selectSingle(this)">空腹</button>
+      <button class="chip" data-val="関係なし" onclick="selectSingle(this)">関係なし</button>
     </div>
+  </div>
+</div>
 
-    <button class="save-btn" onclick="saveRecord()">記録する</button>
+<div class="card">
+  <div class="section-title">📝 メモ</div>
+  <textarea id="noteInput" placeholder="今日どんな一日だったか、気になること、なんでも"></textarea>
+</div>
+
+<button class="save-btn" onclick="saveRecord()">記録する</button>
+```
+
   </div>
 
   <div id="tab-history" class="hidden">
@@ -439,199 +492,271 @@ textarea:focus, input:focus { outline: none; border-color: var(--accent); }
       <p class="modal-note" style="margin-top:10px">絵文字アイコンをタップして変更できます</p>
     </div>
 
-    <div class="card">
-      <div class="section-title">🔥 接続情報</div>
-      <div class="stat-row">
-        <span class="stat-label">プロジェクト</span>
-        <span class="stat-value" style="font-size:12px">condition-kazutan-manager</span>
-      </div>
-      <div class="stat-row">
-        <span class="stat-label">ステータス</span>
-        <span class="stat-value" id="settingsSyncText" style="font-size:13px">確認中</span>
-      </div>
+```
+<div class="card">
+  <div class="section-title">🔥 接続情報</div>
+  <div class="stat-row">
+    <span class="stat-label">プロジェクト</span>
+    <span class="stat-value" style="font-size:12px">condition-kazutan-manager</span>
+  </div>
+  <div class="stat-row">
+    <span class="stat-label">ステータス</span>
+    <span class="stat-value" id="settingsSyncText" style="font-size:13px">確認中</span>
+  </div>
+</div>
+
+<!-- マニュアル -->
+<div class="card">
+  <div class="acc-toggle" onclick="toggleAcc(this)">
+    <div class="section-title" style="margin-bottom:0">📖 マニュアル</div>
+    <span class="arrow">▼</span>
+  </div>
+  <div class="acc-content">
+    <div style="padding-top:14px">
+
+      <h3 class="manual-h3">🌿 このアプリは何？</h3>
+      <p class="manual-text">
+        <b>かずたんマネージャー</b>は、ふたりで使える体調記録アプリです。
+        体調や食欲、症状を気軽に記録すると、時間帯やパターンの傾向が自動で分析されます。
+      </p>
+
+      <h3 class="manual-h3">📝 記録のしかた</h3>
+
+      <h4 class="manual-h4">① 「だれの記録？」を選ぶ</h4>
+      <p class="manual-text">名前ボタンを押して、誰の記録か選んでください。「かんり」タブでメンバーを追加できます。</p>
+
+      <h4 class="manual-h4">② 「いまの体調は？」を選ぶ</h4>
+      <ul class="manual-list">
+        <li>☀️ 元気 / 🌤 まあまあ / 🌧 わるい / ⛈ つらい の4段階</li>
+      </ul>
+
+      <h4 class="manual-h4">③ 食欲メーターを選ぶ</h4>
+      <table class="manual-table">
+        <tr><th>マーク</th><th>レベル</th><th>意味</th></tr>
+        <tr><td>🍜</td><td>超いい</td><td>ラーメン求</td></tr>
+        <tr><td>🍙</td><td>ふつう</td><td>普通に米食えそう</td></tr>
+        <tr><td>😶</td><td>びわる</td><td>米ちょい険しいかも</td></tr>
+        <tr><td>🛌</td><td>きょくわる</td><td>米はむりだあ</td></tr>
+      </table>
+
+      <h4 class="manual-h4">④ 症状（複数選択OK）</h4>
+      <p class="manual-text">頭痛・腹痛・お腹パンパン・ゲップ・吐き気・めまい・だるい・眠気・不安・生理 から選択。複数同時に選べます。</p>
+
+      <h4 class="manual-h4">⑤ 食事タイミング</h4>
+      <p class="manual-text">食前・食後・空腹・関係なし から1つ選択。</p>
+
+      <h4 class="manual-h4">⑥ メモ</h4>
+      <p class="manual-text">自由記述。何でも書いてOK（例：天気、ストレス、食べたもの）。</p>
+
+      <h4 class="manual-h4">⑦ 「記録する」ボタンを押して完了</h4>
+
+      <h3 class="manual-h3">📚 各タブでできること</h3>
+
+      <h4 class="manual-h4">きろく</h4>
+      <p class="manual-text">体調を新規登録するメイン画面。</p>
+
+      <h4 class="manual-h4">りれき</h4>
+      <p class="manual-text">過去の記録を新しい順に一覧表示。メンバー別フィルタで切り替え可能。記録を削除することもできます。</p>
+
+      <h4 class="manual-h4">ぶんせき</h4>
+      <p class="manual-text">記録から自動で傾向を抽出して見せます（詳しくは下の「分析の仕様」を参照）。</p>
+
+      <h4 class="manual-h4">かんり</h4>
+      <p class="manual-text">メンバー追加・削除、絵文字変更、接続情報の確認、このマニュアルの閲覧ができます。</p>
+
+      <h3 class="manual-h3">💡 ちょっとしたコツ</h3>
+      <ul class="manual-list">
+        <li>毎日記録しなくてOK。「あ、ちょっとつらいな」と感じたときだけでも大丈夫</li>
+        <li>3件以上記録がたまると分析が動き始めます</li>
+        <li>1日に複数回記録してもOK（例：朝つらい、夜は元気 など）</li>
+        <li>メモには天気や生活習慣を書いておくと、後で見返したときに役立ちます</li>
+      </ul>
+
+      <h3 class="manual-h3">🔒 プライバシー</h3>
+      <ul class="manual-list">
+        <li>記録は Firebase に保存され、あいことば「みちくん」を知っている人だけが見られます</li>
+        <li>毎回起動時にあいことばが必要です</li>
+        <li>2人以外には共有しないでください</li>
+      </ul>
+
     </div>
+  </div>
+</div>
 
-    <!-- マニュアル -->
-    <div class="card">
-      <div class="acc-toggle" onclick="toggleAcc(this)">
-        <div class="section-title" style="margin-bottom:0">📖 マニュアル</div>
-        <span class="arrow">▼</span>
+<!-- 分析の仕様 -->
+<div class="card">
+  <div class="acc-toggle" onclick="toggleAcc(this)">
+    <div class="section-title" style="margin-bottom:0">📊 分析の仕様</div>
+    <span class="arrow">▼</span>
+  </div>
+  <div class="acc-content">
+    <div style="padding-top:14px">
+
+      <p class="manual-text">
+        ぶんせきタブでは、記録データから自動で傾向を抽出します。
+        記録が <b>3件以上</b> たまると分析が表示されます。
+      </p>
+
+      <h3 class="manual-h3">🌿 見えてきたこと（インサイト）</h3>
+      <p class="manual-text">画面の一番上に表示される自動コメント。以下の要素を組み合わせて生成しています：</p>
+      <ul class="manual-list">
+        <li>記録数の合計</li>
+        <li>もっとも記録が多い時間帯</li>
+        <li>もっとも多い食欲レベル</li>
+        <li>よく出る症状トップ3</li>
+        <li>つらい記録が多い曜日（2件以上ある場合）</li>
+        <li>先週と今週の体調変化（直近2週でデータがある場合）</li>
+      </ul>
+
+      <h3 class="manual-h3">📅 カレンダー</h3>
+      <p class="manual-text">月ごとに、各日の体調をアイコンと色で表示します。</p>
+      <table class="manual-table">
+        <tr><th>色</th><th>体調</th></tr>
+        <tr><td style="background:#f2f6ef">薄緑</td><td>元気</td></tr>
+        <tr><td style="background:#fff8e8">薄黄</td><td>まあまあ</td></tr>
+        <tr><td style="background:#f4d4c5">薄橙</td><td>わるい</td></tr>
+        <tr><td style="background:#fdecea">薄赤</td><td>つらい</td></tr>
+      </table>
+      <div class="manual-callout">
+        <div class="manual-callout-title">⚠️ 1日に複数記録があったら？</div>
+        その日の<b>最新の記録</b>を表示します。前月・翌月ボタンで月を切り替えられます。
       </div>
-      <div class="acc-content">
-        <div style="padding-top:14px">
 
-          <h3 class="manual-h3">🌿 このアプリは何？</h3>
-          <p class="manual-text">
-            <b>かずたんマネージャー</b>は、ふたりで使える体調記録アプリです。
-            体調や食欲、症状を気軽に記録すると、時間帯やパターンの傾向が自動で分析されます。
-          </p>
+      <h3 class="manual-h3">⏰ 時間帯ごとの記録数</h3>
+      <p class="manual-text">記録した時刻を5つの時間帯に分類して、棒グラフで表示します。</p>
+      <table class="manual-table">
+        <tr><th>時間帯</th><th>範囲</th></tr>
+        <tr><td>朝</td><td>5:00〜10:59</td></tr>
+        <tr><td>昼</td><td>11:00〜14:59</td></tr>
+        <tr><td>夕方</td><td>15:00〜18:59</td></tr>
+        <tr><td>夜</td><td>19:00〜22:59</td></tr>
+        <tr><td>深夜</td><td>23:00〜4:59</td></tr>
+      </table>
 
-          <h3 class="manual-h3">📝 記録のしかた</h3>
+      <h3 class="manual-h3">📆 曜日別 つらい記録</h3>
+      <p class="manual-text">
+        「わるい」または「つらい」と記録した日を曜日別に集計。
+        「月曜がしんどい」みたいな傾向が見えます。
+      </p>
 
-          <h4 class="manual-h4">① 「だれの記録？」を選ぶ</h4>
-          <p class="manual-text">名前ボタンを押して、誰の記録か選んでください。「かんり」タブでメンバーを追加できます。</p>
+      <h3 class="manual-h3">📈 直近4週の傾向</h3>
+      <p class="manual-text">
+        今日から逆算して4週間分の体調記録を、週ごとに積み上げ棒グラフで表示。
+        色で体調レベルが分かります。
+      </p>
+      <ul class="manual-list">
+        <li>緑＝元気、黄＝まあまあ、橙＝わるい、赤＝つらい</li>
+        <li>先週と今週で「わるい・つらい」記録の数を比較してコメントを自動生成</li>
+        <li>例：「先週より体調つらい記録が減ってる ✨」</li>
+      </ul>
 
-          <h4 class="manual-h4">② 「いまの体調は？」を選ぶ</h4>
-          <ul class="manual-list">
-            <li>☀️ 元気 / 🌤 まあまあ / 🌧 わるい / ⛈ つらい の4段階</li>
-          </ul>
-
-          <h4 class="manual-h4">③ 食欲メーターを選ぶ</h4>
-          <table class="manual-table">
-            <tr><th>マーク</th><th>レベル</th><th>意味</th></tr>
-            <tr><td>🍜</td><td>超いい</td><td>ラーメン求</td></tr>
-            <tr><td>🍙</td><td>ふつう</td><td>普通に米食えそう</td></tr>
-            <tr><td>😶</td><td>びわる</td><td>米ちょい険しいかも</td></tr>
-            <tr><td>🛌</td><td>きょくわる</td><td>米はむりだあ</td></tr>
-          </table>
-
-          <h4 class="manual-h4">④ 症状（複数選択OK）</h4>
-          <p class="manual-text">頭痛・腹痛・吐き気・めまい・だるい・眠気・不安・生理 から選択。複数同時に選べます。</p>
-
-          <h4 class="manual-h4">⑤ 食事タイミング</h4>
-          <p class="manual-text">食前・食後・空腹・関係なし から1つ選択。</p>
-
-          <h4 class="manual-h4">⑥ メモ</h4>
-          <p class="manual-text">自由記述。何でも書いてOK（例：天気、ストレス、食べたもの）。</p>
-
-          <h4 class="manual-h4">⑦ 「記録する」ボタンを押して完了</h4>
-
-          <h3 class="manual-h3">📚 各タブでできること</h3>
-
-          <h4 class="manual-h4">きろく</h4>
-          <p class="manual-text">体調を新規登録するメイン画面。</p>
-
-          <h4 class="manual-h4">りれき</h4>
-          <p class="manual-text">過去の記録を新しい順に一覧表示。メンバー別フィルタで切り替え可能。記録を削除することもできます。</p>
-
-          <h4 class="manual-h4">ぶんせき</h4>
-          <p class="manual-text">記録から自動で傾向を抽出して見せます（詳しくは下の「分析の仕様」を参照）。</p>
-
-          <h4 class="manual-h4">かんり</h4>
-          <p class="manual-text">メンバー追加・削除、絵文字変更、接続情報の確認、このマニュアルの閲覧ができます。</p>
-
-          <h3 class="manual-h3">💡 ちょっとしたコツ</h3>
-          <ul class="manual-list">
-            <li>毎日記録しなくてOK。「あ、ちょっとつらいな」と感じたときだけでも大丈夫</li>
-            <li>3件以上記録がたまると分析が動き始めます</li>
-            <li>1日に複数回記録してもOK（例：朝つらい、夜は元気 など）</li>
-            <li>メモには天気や生活習慣を書いておくと、後で見返したときに役立ちます</li>
-          </ul>
-
-          <h3 class="manual-h3">🔒 プライバシー</h3>
-          <ul class="manual-list">
-            <li>記録は Firebase に保存され、あいことば「みちくん」を知っている人だけが見られます</li>
-            <li>毎回起動時にあいことばが必要です</li>
-            <li>2人以外には共有しないでください</li>
-          </ul>
-
-        </div>
+      <h3 class="manual-h3">🔍 よくあるパターン（組み合わせ分析）</h3>
+      <p class="manual-text">3種類の組み合わせから、2回以上出てくるパターンを上位5個まで表示します：</p>
+      <ul class="manual-list">
+        <li><b>時間帯 × 食欲</b>（例：「夜は 食欲ダウン」）</li>
+        <li><b>時間帯 × 症状</b>（例：「朝に 頭痛」）</li>
+        <li><b>食事タイミング × 症状</b>（例：「食後に 腹痛」）</li>
+      </ul>
+      <div class="manual-callout">
+        <div class="manual-callout-title">🌿 なぜ2回以上？</div>
+        1回だけだと偶然の可能性が高いので、繰り返してる傾向だけを拾うようにしています。
       </div>
+
+      <h3 class="manual-h3">👥 メンバー別フィルタ</h3>
+      <p class="manual-text">
+        画面上部の「だれの記録を見る？」で、自分・彼女どちらかを選ぶと、
+        そのメンバーの記録だけで分析されます。
+        「すべて」を選ぶと全員分まとめての分析になります。
+      </p>
+
+      <h3 class="manual-h3">⚙️ 内部の動き（おまけ）</h3>
+      <ul class="manual-list">
+        <li>分析はリアルタイム計算。記録が追加・削除されると自動で更新されます</li>
+        <li>定期取得（ポーリング）はせず、Firebaseのリスナーで変化があった時だけ通信します</li>
+        <li>無料枠を消費しにくい設計です</li>
+      </ul>
+
     </div>
+  </div>
+</div>
+```
 
-    <!-- 分析の仕様 -->
-    <div class="card">
-      <div class="acc-toggle" onclick="toggleAcc(this)">
-        <div class="section-title" style="margin-bottom:0">📊 分析の仕様</div>
-        <span class="arrow">▼</span>
-      </div>
-      <div class="acc-content">
-        <div style="padding-top:14px">
-
-          <p class="manual-text">
-            ぶんせきタブでは、記録データから自動で傾向を抽出します。
-            記録が <b>3件以上</b> たまると分析が表示されます。
-          </p>
-
-          <h3 class="manual-h3">🌿 見えてきたこと（インサイト）</h3>
-          <p class="manual-text">画面の一番上に表示される自動コメント。以下の要素を組み合わせて生成しています：</p>
-          <ul class="manual-list">
-            <li>記録数の合計</li>
-            <li>もっとも記録が多い時間帯</li>
-            <li>もっとも多い食欲レベル</li>
-            <li>よく出る症状トップ3</li>
-            <li>つらい記録が多い曜日（2件以上ある場合）</li>
-            <li>先週と今週の体調変化（直近2週でデータがある場合）</li>
-          </ul>
-
-          <h3 class="manual-h3">📅 カレンダー</h3>
-          <p class="manual-text">月ごとに、各日の体調をアイコンと色で表示します。</p>
-          <table class="manual-table">
-            <tr><th>色</th><th>体調</th></tr>
-            <tr><td style="background:#f2f6ef">薄緑</td><td>元気</td></tr>
-            <tr><td style="background:#fff8e8">薄黄</td><td>まあまあ</td></tr>
-            <tr><td style="background:#f4d4c5">薄橙</td><td>わるい</td></tr>
-            <tr><td style="background:#fdecea">薄赤</td><td>つらい</td></tr>
-          </table>
-          <div class="manual-callout">
-            <div class="manual-callout-title">⚠️ 1日に複数記録があったら？</div>
-            その日の<b>最新の記録</b>を表示します。前月・翌月ボタンで月を切り替えられます。
-          </div>
-
-          <h3 class="manual-h3">⏰ 時間帯ごとの記録数</h3>
-          <p class="manual-text">記録した時刻を5つの時間帯に分類して、棒グラフで表示します。</p>
-          <table class="manual-table">
-            <tr><th>時間帯</th><th>範囲</th></tr>
-            <tr><td>朝</td><td>5:00〜10:59</td></tr>
-            <tr><td>昼</td><td>11:00〜14:59</td></tr>
-            <tr><td>夕方</td><td>15:00〜18:59</td></tr>
-            <tr><td>夜</td><td>19:00〜22:59</td></tr>
-            <tr><td>深夜</td><td>23:00〜4:59</td></tr>
-          </table>
-
-          <h3 class="manual-h3">📆 曜日別 つらい記録</h3>
-          <p class="manual-text">
-            「わるい」または「つらい」と記録した日を曜日別に集計。
-            「月曜がしんどい」みたいな傾向が見えます。
-          </p>
-
-          <h3 class="manual-h3">📈 直近4週の傾向</h3>
-          <p class="manual-text">
-            今日から逆算して4週間分の体調記録を、週ごとに積み上げ棒グラフで表示。
-            色で体調レベルが分かります。
-          </p>
-          <ul class="manual-list">
-            <li>緑＝元気、黄＝まあまあ、橙＝わるい、赤＝つらい</li>
-            <li>先週と今週で「わるい・つらい」記録の数を比較してコメントを自動生成</li>
-            <li>例：「先週より体調つらい記録が減ってる ✨」</li>
-          </ul>
-
-          <h3 class="manual-h3">🔍 よくあるパターン（組み合わせ分析）</h3>
-          <p class="manual-text">3種類の組み合わせから、2回以上出てくるパターンを上位5個まで表示します：</p>
-          <ul class="manual-list">
-            <li><b>時間帯 × 食欲</b>（例：「夜は 食欲ダウン」）</li>
-            <li><b>時間帯 × 症状</b>（例：「朝に 頭痛」）</li>
-            <li><b>食事タイミング × 症状</b>（例：「食後に 腹痛」）</li>
-          </ul>
-          <div class="manual-callout">
-            <div class="manual-callout-title">🌿 なぜ2回以上？</div>
-            1回だけだと偶然の可能性が高いので、繰り返してる傾向だけを拾うようにしています。
-          </div>
-
-          <h3 class="manual-h3">👥 メンバー別フィルタ</h3>
-          <p class="manual-text">
-            画面上部の「だれの記録を見る？」で、自分・彼女どちらかを選ぶと、
-            そのメンバーの記録だけで分析されます。
-            「すべて」を選ぶと全員分まとめての分析になります。
-          </p>
-
-          <h3 class="manual-h3">⚙️ 内部の動き（おまけ）</h3>
-          <ul class="manual-list">
-            <li>分析はリアルタイム計算。記録が追加・削除されると自動で更新されます</li>
-            <li>定期取得（ポーリング）はせず、Firebaseのリスナーで変化があった時だけ通信します</li>
-            <li>無料枠を消費しにくい設計です</li>
-          </ul>
-
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
+<!-- 編集モーダル -->
+
+<div id="editOverlay" class="edit-overlay" style="display:none">
+  <div class="edit-modal" onclick="event.stopPropagation()">
+    <div class="edit-modal-header">
+      <span class="edit-modal-title">記録を編集</span>
+      <button class="edit-modal-close" onclick="closeEditModal()">✕</button>
+    </div>
+
+```
+<div class="edit-modal-section">
+  <span class="edit-modal-label">体調</span>
+  <div class="cond-row" id="editCondRow">
+    <button class="cond-btn" data-cond="genki"  onclick="editSelectCond(this)"><span class="cb-emoji">☀️</span>元気</button>
+    <button class="cond-btn" data-cond="futsuu" onclick="editSelectCond(this)"><span class="cb-emoji">🌤</span>まあまあ</button>
+    <button class="cond-btn" data-cond="warui"  onclick="editSelectCond(this)"><span class="cb-emoji">🌧</span>わるい</button>
+    <button class="cond-btn" data-cond="tsurai" onclick="editSelectCond(this)"><span class="cb-emoji">⛈</span>つらい</button>
+  </div>
+</div>
+
+<div class="edit-modal-section">
+  <span class="edit-modal-label">食欲</span>
+  <div class="appetite-grid" id="editAppetiteRow">
+    <button class="appetite-btn" data-ap="choo" onclick="editSelectAppetite(this)"><span class="ap-emoji">🍜</span><span class="ap-label">超いい</span><span class="ap-desc">ラーメン求</span></button>
+    <button class="appetite-btn" data-ap="futsuu" onclick="editSelectAppetite(this)"><span class="ap-emoji">🍙</span><span class="ap-label">ふつう</span><span class="ap-desc">普通に米食えそう</span></button>
+    <button class="appetite-btn" data-ap="biwaru" onclick="editSelectAppetite(this)"><span class="ap-emoji">😶</span><span class="ap-label">びわる</span><span class="ap-desc">米ちょい険しいかも</span></button>
+    <button class="appetite-btn" data-ap="kyokuwaru" onclick="editSelectAppetite(this)"><span class="ap-emoji">🛌</span><span class="ap-label">きょくわる</span><span class="ap-desc">米はむりだあ</span></button>
+  </div>
+</div>
+
+<div class="edit-modal-section">
+  <span class="edit-modal-label">症状</span>
+  <div class="chip-group" id="editSymptomRow">
+    <button class="chip" data-val="頭痛" onclick="editToggleChip(this)">頭痛</button>
+    <button class="chip" data-val="腹痛" onclick="editToggleChip(this)">腹痛</button>
+    <button class="chip" data-val="お腹パンパン" onclick="editToggleChip(this)">お腹パンパン</button>
+    <button class="chip" data-val="ゲップ" onclick="editToggleChip(this)">ゲップ</button>
+    <button class="chip" data-val="吐き気" onclick="editToggleChip(this)">吐き気</button>
+    <button class="chip" data-val="めまい" onclick="editToggleChip(this)">めまい</button>
+    <button class="chip" data-val="だるい" onclick="editToggleChip(this)">だるい</button>
+    <button class="chip" data-val="眠気" onclick="editToggleChip(this)">眠気</button>
+    <button class="chip" data-val="不安" onclick="editToggleChip(this)">不安</button>
+    <button class="chip" data-val="生理" onclick="editToggleChip(this)">生理</button>
+  </div>
+</div>
+
+<div class="edit-modal-section">
+  <span class="edit-modal-label">食事タイミング</span>
+  <div class="chip-group" id="editMealRow">
+    <button class="chip" data-val="食前" onclick="editSelectMeal(this)">食前</button>
+    <button class="chip" data-val="食後" onclick="editSelectMeal(this)">食後</button>
+    <button class="chip" data-val="空腹" onclick="editSelectMeal(this)">空腹</button>
+    <button class="chip" data-val="関係なし" onclick="editSelectMeal(this)">関係なし</button>
+  </div>
+</div>
+
+<div class="edit-modal-section">
+  <span class="edit-modal-label">メモ</span>
+  <textarea id="editNoteInput" placeholder="メモ"></textarea>
+</div>
+
+<button class="edit-save-btn" onclick="saveEdit()">保存する</button>
+```
+
+  </div>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
 <script>
 // ===== あいことばロック =====
 var SECRET_PASSWORD = 'みちくん';
@@ -913,6 +1038,7 @@ function renderHistory() {
       '<span class="record-time">' + formatTime(r.timestamp) + '</span>' +
       '<span style="display:flex;align-items:center;gap:4px">' +
       '<span class="record-who">' + esc((r.memberEmoji||'👤')+' '+(r.memberName||'？')) + '</span>' +
+      '<button class="edit-btn" onclick="openEditModal(\''+r.fbKey+'\')" title="編集">✏️</button>' +
       '<button class="delete-btn" onclick="deleteRecord(\''+r.fbKey+'\')">🗑</button>' +
       '</span></div>';
     if (r.cond) html += '<div class="record-cond">' + (COND_LABEL[r.cond]||r.cond) + '</div>';
@@ -1264,6 +1390,109 @@ function showToast(msg) {
   setTimeout(function(){ t.classList.remove('show'); }, 2500);
 }
 
+// ===== 編集モーダル =====
+var editingRecordId = null;
+var editCond = null;
+var editAppetite = null;
+var editSymptoms = [];
+var editMeal = null;
+
+function openEditModal(fbKey) {
+  var rec = null;
+  for (var i=0;i<records.length;i++) { if (records[i].fbKey === fbKey) { rec = records[i]; break; } }
+  if (!rec) return;
+  editingRecordId = fbKey;
+  editCond = rec.cond || null;
+  editAppetite = rec.appetite || null;
+  editSymptoms = rec.symptoms ? rec.symptoms.slice() : [];
+  editMeal = rec.meal || null;
+
+  // 体調
+  var condBtns = document.querySelectorAll('#editCondRow .cond-btn');
+  for (var i=0;i<condBtns.length;i++) {
+    condBtns[i].classList.toggle('active', condBtns[i].dataset.cond === editCond);
+  }
+  // 食欲
+  var apBtns = document.querySelectorAll('#editAppetiteRow .appetite-btn');
+  for (var i=0;i<apBtns.length;i++) {
+    apBtns[i].className = 'appetite-btn';
+    if (apBtns[i].dataset.ap === editAppetite) {
+      apBtns[i].classList.add('active-' + editAppetite);
+    }
+  }
+  // 症状
+  var symBtns = document.querySelectorAll('#editSymptomRow .chip');
+  for (var i=0;i<symBtns.length;i++) {
+    symBtns[i].classList.toggle('active', editSymptoms.indexOf(symBtns[i].dataset.val) >= 0);
+  }
+  // 食事
+  var mealBtns = document.querySelectorAll('#editMealRow .chip');
+  for (var i=0;i<mealBtns.length;i++) {
+    mealBtns[i].classList.toggle('active', mealBtns[i].dataset.val === editMeal);
+  }
+  // メモ
+  document.getElementById('editNoteInput').value = rec.note || '';
+
+  document.getElementById('editOverlay').style.display = 'flex';
+}
+
+function closeEditModal() {
+  document.getElementById('editOverlay').style.display = 'none';
+  editingRecordId = null;
+}
+
+document.getElementById('editOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeEditModal();
+});
+
+function editSelectCond(btn) {
+  var all = document.querySelectorAll('#editCondRow .cond-btn');
+  for (var i=0;i<all.length;i++) all[i].classList.remove('active');
+  btn.classList.add('active');
+  editCond = btn.dataset.cond;
+}
+
+function editSelectAppetite(btn) {
+  var all = document.querySelectorAll('#editAppetiteRow .appetite-btn');
+  for (var i=0;i<all.length;i++) all[i].className = 'appetite-btn';
+  btn.classList.add('active-' + btn.dataset.ap);
+  editAppetite = btn.dataset.ap;
+}
+
+function editToggleChip(btn) {
+  btn.classList.toggle('active');
+  var val = btn.dataset.val;
+  if (btn.classList.contains('active')) {
+    if (editSymptoms.indexOf(val) < 0) editSymptoms.push(val);
+  } else {
+    editSymptoms = editSymptoms.filter(function(s){return s!==val;});
+  }
+}
+
+function editSelectMeal(btn) {
+  var all = document.querySelectorAll('#editMealRow .chip');
+  for (var i=0;i<all.length;i++) all[i].classList.remove('active');
+  btn.classList.add('active');
+  editMeal = btn.dataset.val;
+}
+
+function saveEdit() {
+  if (!editingRecordId) return;
+  var updates = {
+    cond: editCond,
+    appetite: editAppetite,
+    symptoms: editSymptoms.slice(),
+    meal: editMeal,
+    note: document.getElementById('editNoteInput').value.trim()
+  };
+  db.ref('records/' + editingRecordId).update(updates).then(function() {
+    showToast('修正しました 🌿');
+    closeEditModal();
+  }).catch(function(e) {
+    showToast('保存エラー: ' + e.message);
+  });
+}
+
 // マニュアル・分析仕様のアコーディオン
 function toggleAcc(headerEl) {
   headerEl.classList.toggle('open');
@@ -1273,5 +1502,6 @@ function toggleAcc(headerEl) {
   }
 }
 </script>
+
 </body>
 </html>
