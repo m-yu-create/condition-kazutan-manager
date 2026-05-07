@@ -1,5 +1,9 @@
 // firebase-messaging-sw.js
 // プッシュ通知をバックグラウンドで受信するためのService Worker
+//
+// FCMは `notification` フィールドのある payload を自動で通知表示する。
+// onBackgroundMessage を実装するとそこでも表示してしまい二重表示になるので、
+// このSWでは onBackgroundMessage は実装せず、自動表示に任せる。
 
 importScripts('https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js');
@@ -14,24 +18,10 @@ firebase.initializeApp({
   appId: "1:843970162374:web:fe2d6b9bf3efc87aeef1c7"
 });
 
-const messaging = firebase.messaging();
+// FCMの初期化（必須、これだけで自動通知表示が有効になる）
+firebase.messaging();
 
-// アプリが閉じている時の通知ハンドリング
-messaging.onBackgroundMessage(function(payload) {
-  console.log('[firebase-messaging-sw.js] バックグラウンド通知:', payload);
-
-  const notificationTitle = (payload.notification && payload.notification.title) || 'かずたんマネージャー';
-  const notificationOptions = {
-    body: (payload.notification && payload.notification.body) || '新しい記録があります',
-    icon: '/condition-kazutan-manager/icon-192.png',
-    badge: '/condition-kazutan-manager/icon-192.png',
-    tag: 'kazutan-notification'
-  };
-
-  return self.registration.showNotification(notificationTitle, notificationOptions);
-});
-
-// 通知をタップしたらアプリを開く
+// 通知タップでアプリを開く処理だけ追加
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
   event.waitUntil(
