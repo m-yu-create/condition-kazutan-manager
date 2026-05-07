@@ -497,6 +497,22 @@ textarea:focus, input:focus { outline: none; border-color: var(--accent); }
       <p class="modal-note" style="margin-top:10px">絵文字アイコンをタップして変更できます</p>
     </div>
 
+    <!-- プッシュ通知 -->
+    <div class="card">
+      <div class="section-title">🔔 プッシュ通知</div>
+      <div id="notifyStatus" style="font-size:13px;color:var(--ink-soft);margin-bottom:12px;line-height:1.7">
+        通知を有効にすると、相手が記録した時にお知らせが届きます。<br>
+        メンバーを選んでから「通知を有効にする」を押してください。
+      </div>
+      <button class="modal-btn" onclick="enableNotifications()" id="notifyBtn"
+        style="font-size:14px;padding:12px;background:#d97757">
+        通知を有効にする
+      </button>
+      <p class="modal-note" style="margin-top:8px">
+        ※ iOSはホーム画面のアプリから開いた時だけ通知が届きます
+      </p>
+    </div>
+
     <div class="card">
       <div class="section-title">🔥 接続情報</div>
       <div class="stat-row">
@@ -753,6 +769,7 @@ textarea:focus, input:focus { outline: none; border-color: var(--accent); }
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js"></script>
 <script>
 // ===== あいことばロック =====
 var SECRET_PASSWORD = 'みちくん';
@@ -782,6 +799,75 @@ var firebaseConfig = {
 var app = firebase.initializeApp(firebaseConfig);
 var db = firebase.database();
 console.log('Firebase initialized OK');
+
+// ===== Firebase Cloud Messaging =====
+var VAPID_KEY = 'BKeGsIsuA_SoEy_dU_LmG3Qnxq8QWn6i8O3sV70TdPpPdq9XJH7T3qqS8FIvQ7lXuxQOiAVwDytZOFNBYRqB0uQ';
+var messaging = null;
+
+try {
+  if (firebase.messaging.isSupported && firebase.messaging.isSupported()) {
+    messaging = firebase.messaging();
+    console.log('FCM initialized OK');
+  } else {
+    console.warn('FCM not supported in this browser');
+  }
+} catch(e) {
+  console.warn('FCM init error:', e);
+}
+
+function enableNotifications() {
+  if (!messaging) {
+    showToast('このブラウザは通知非対応です');
+    return;
+  }
+  if (!selectedMemberId) {
+    showToast('先にメンバーを選んでください');
+    return;
+  }
+  if (!('serviceWorker' in navigator)) {
+    showToast('Service Worker非対応のブラウザです');
+    return;
+  }
+
+  var swPath = '/condition-kazutan-manager/firebase-messaging-sw.js';
+
+  navigator.serviceWorker.register(swPath)
+    .then(function(registration) {
+      console.log('Service Worker registered:', registration);
+      return messaging.getToken({
+        vapidKey: VAPID_KEY,
+        serviceWorkerRegistration: registration
+      });
+    })
+    .then(function(token) {
+      if (!token) {
+        showToast('通知の許可が得られませんでした');
+        return;
+      }
+      console.log('FCM Token:', token);
+      // メンバーごとにトークンを保存
+      return db.ref('members/' + selectedMemberId + '/fcmToken').set(token).then(function() {
+        document.getElementById('notifyStatus').innerHTML = '✅ 通知が有効になりました 🔔';
+        document.getElementById('notifyBtn').textContent = '通知 有効';
+        document.getElementById('notifyBtn').disabled = true;
+        document.getElementById('notifyBtn').style.opacity = '0.6';
+        showToast('通知を有効にしました 🔔');
+      });
+    })
+    .catch(function(err) {
+      console.error('Notification error:', err);
+      showToast('通知エラー: ' + (err.message || err.code || err));
+    });
+}
+
+// アプリを開いている時の通知（フォアグラウンド受信）
+if (messaging) {
+  messaging.onMessage(function(payload) {
+    console.log('Foreground message:', payload);
+    var body = (payload.notification && payload.notification.body) || '新しい記録があります';
+    showToast('🔔 ' + body);
+  });
+}
 
 var records = [];
 var members = [];
