@@ -815,6 +815,10 @@ try {
   console.warn('FCM init error:', e);
 }
 
+// この端末で通知を許可済みのメンバーIDをlocalStorageに記録
+var NOTIFY_ENABLED_KEY = 'kazutan_notify_member_id';
+
+// ボタン押下時：通知を有効化
 function enableNotifications() {
   if (!messaging) {
     showToast('このブラウザは通知非対応です');
@@ -829,11 +833,15 @@ function enableNotifications() {
     return;
   }
 
+  registerNotificationToken(selectedMemberId, true);
+}
+
+// 実際にトークンを取得して保存（自動更新でも呼ばれる）
+function registerNotificationToken(memberId, isManual) {
   var swPath = '/condition-kazutan-manager/firebase-messaging-sw.js';
 
-  navigator.serviceWorker.register(swPath)
+  return navigator.serviceWorker.register(swPath)
     .then(function(registration) {
-      console.log('Service Worker registered:', registration);
       return messaging.getToken({
         vapidKey: VAPID_KEY,
         serviceWorkerRegistration: registration
@@ -841,23 +849,89 @@ function enableNotifications() {
     })
     .then(function(token) {
       if (!token) {
-        showToast('通知の許可が得られませんでした');
+        if (isManual) showToast('通知の許可が得られませんでした');
         return;
       }
-      console.log('FCM Token:', token);
-      // メンバーごとにトークンを保存
-      return db.ref('members/' + selectedMemberId + '/fcmToken').set(token).then(function() {
-        document.getElementById('notifyStatus').innerHTML = '✅ 通知が有効になりました 🔔';
-        document.getElementById('notifyBtn').textContent = '通知 有効';
-        document.getElementById('notifyBtn').disabled = true;
-        document.getElementById('notifyBtn').style.opacity = '0.6';
-        showToast('通知を有効にしました 🔔');
+      console.log('FCM Token:', token.substring(0, 20) + '...');
+
+      // 複数トークン対応: members/{id}/fcmTokens/{token} = 登録日時
+      var tokenRef = db.ref('members/' + memberId + '/fcmTokens/' + token.replace(/[.#$/[\]]/g, '_'));
+      var tokenInfo = {
+        token: token,
+        updatedAt: new Date().toISOString(),
+        userAgent: navigator.userAgent.substring(0, 100)
+      };
+
+      return tokenRef.set(tokenInfo).then(function() {
+        // 旧形式の互換性: fcmToken も上書き（古いFunctionsとの互換のため、後で消してOK）
+        db.ref('members/' + memberId + '/fcmToken').set(token);
+
+        // この端末で通知を有効にしたメンバーをlocalStorageに保存
+        localStorage.setItem(NOTIFY_ENABLED_KEY, memberId);
+
+        if (isManual) {
+          var statusEl = document.getElementById('notifyStatus');
+          var btnEl = document.getElementById('notifyBtn');
+          if (statusEl) statusEl.innerHTML = '✅ 通知が有効になりました 🔔<br>アプリを開くたびに自動で更新されます';
+          if (btnEl) {
+            btnEl.textContent = '通知 有効（自動更新中）';
+            btnEl.disabled = true;
+            btnEl.style.opacity = '0.6';
+          }
+          showToast('通知を有効にしました 🔔');
+        } else {
+          console.log('Token auto-refreshed');
+        }
       });
     })
     .catch(function(err) {
       console.error('Notification error:', err);
-      showToast('通知エラー: ' + (err.message || err.code || err));
+      if (isManual) showToast('通知エラー: ' + (err.message || err.code || err));
     });
+}
+
+// アプリ起動時：以前に通知有効化した端末なら自動でトークン更新
+function autoRefreshTokenIfNeeded() {
+  if (!messaging) return;
+  var savedMemberId = localStorage.getItem(NOTIFY_ENABLED_KEY);
+  if (!savedMemberId) return;
+
+  // メンバー一覧が読み込まれた後でないと意味がないので、少し待つ
+  setTimeout(function() {
+    // メンバーがまだ存在するか確認
+    var exists = false;
+    for (var i = 0; i < members.length; i++) {
+      if (members[i].fbKey === savedMemberId) { exists = true; break; }
+    }
+    if (!exists) {
+      console.log('Saved member no longer exists');
+      localStorage.removeItem(NOTIFY_ENABLED_KEY);
+      return;
+    }
+
+    // UI状態を「有効中」に
+    var statusEl = document.getElementById('notifyStatus');
+    var btnEl = document.getElementById('notifyBtn');
+    if (statusEl) statusEl.innerHTML = '✅ 通知 有効（自動更新中）';
+    if (btnEl) {
+      btnEl.textContent = '通知 有効';
+      btnEl.disabled = true;
+      btnEl.style.opacity = '0.6';
+    }
+
+    // バックグラウンドで通知許可状態を確認＆トークン更新
+    if (Notification && Notification.permission === 'granted') {
+      registerNotificationToken(savedMemberId, false);
+    } else {
+      console.log('Notification permission lost, please re-enable');
+      if (statusEl) statusEl.innerHTML = '⚠️ 通知の許可が解除されたみたい。再度有効にしてください';
+      if (btnEl) {
+        btnEl.textContent = '通知を有効にする';
+        btnEl.disabled = false;
+        btnEl.style.opacity = '1';
+      }
+    }
+  }, 2000);
 }
 
 // アプリを開いている時の通知（フォアグラウンド受信）
@@ -902,6 +976,7 @@ db.ref('.info/connected').on('value', function(snap) {
 });
 
 // メンバー監視
+var firstMembersLoad = true;
 db.ref('members').on('value', function(snap) {
   console.log('members snapshot received', snap.val());
   members = [];
@@ -912,6 +987,12 @@ db.ref('members').on('value', function(snap) {
   renderMemberListManage();
   renderHistoryFilter();
   renderAnalysisFilter();
+
+  // 初回ロード時に通知トークン自動更新
+  if (firstMembersLoad) {
+    firstMembersLoad = false;
+    autoRefreshTokenIfNeeded();
+  }
 }, function(err) {
   console.error('members error:', err);
   setSyncStatus('err', 'エラー: ' + err.message);
